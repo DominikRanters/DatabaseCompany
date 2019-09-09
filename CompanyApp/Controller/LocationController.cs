@@ -10,6 +10,8 @@ namespace CompanyApp.Controller
     {
         string dbSConStr = "";
         string selectCmd = "select Id, Name, FoundedDate from viCompany";
+        string deleteCmd = "update company set DeleteTime = GetDate() where id = @id";
+        string spCreateOrUpdate = "spCreateOrUpdateCompany";
 
         public LocationController(string DbSConStr)
         {
@@ -95,11 +97,10 @@ namespace CompanyApp.Controller
         private bool CreateOrUpdate(Model.Company company)
         {
             bool retval = false;
-            var sp = "spCreateOrUpdateCompany";
 
             using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
             {
-                using (SqlCommand cmd = new SqlCommand(sp, sqlcon))
+                using (SqlCommand cmd = new SqlCommand(spCreateOrUpdate, sqlcon))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@CompanyId", company.Id);
@@ -119,11 +120,10 @@ namespace CompanyApp.Controller
         public bool Delete(int id = 0)
         {
             bool retval = false;
-            var query = $"update company set DeleteTime = GetDate() where id = @id";
 
             using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
             {
-                using (SqlCommand cmd = new SqlCommand(query, sqlcon))
+                using (SqlCommand cmd = new SqlCommand(deleteCmd, sqlcon))
                 {
                     cmd.Parameters.AddWithValue("@id", id);
                     sqlcon.Open();
