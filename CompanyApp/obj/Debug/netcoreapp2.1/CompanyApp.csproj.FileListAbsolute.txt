@@ -9,3 +9,14 @@ C:\dev\projects\training\CompnyDb\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.
 C:\dev\projects\training\CompnyDb\CompanyApp\bin\Debug\netcoreapp2.1\CompanyApp.pdb
 C:\dev\projects\training\CompnyDb\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.dll
 C:\dev\projects\training\CompnyDb\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.pdb
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\bin\Debug\netcoreapp2.1\CompanyApp.deps.json
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\bin\Debug\netcoreapp2.1\CompanyApp.runtimeconfig.json
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\bin\Debug\netcoreapp2.1\CompanyApp.runtimeconfig.dev.json
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\bin\Debug\netcoreapp2.1\CompanyApp.dll
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\bin\Debug\netcoreapp2.1\CompanyApp.pdb
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.csprojAssemblyReference.cache
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.csproj.CoreCompileInputs.cache
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.AssemblyInfoInputs.cache
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.AssemblyInfo.cs
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.dll
+C:\dev\projects\training\DatabaseCompanyNew\CompanyApp\obj\Debug\netcoreapp2.1\CompanyApp.pdb

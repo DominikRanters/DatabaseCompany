@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.779
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CompnyDb", "CompnyDb\CompnyDb.sqlproj", "{BCF61ABE-A7DD-4D61-A74F-9C159E09A922}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CompanyDb", "CompnyDb\CompanyDb.sqlproj", "{BCF61ABE-A7DD-4D61-A74F-9C159E09A922}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyApp", "CompanyApp\CompanyApp.csproj", "{6C2B87FA-10D0-4B63-9C9A-5FF888AFDAE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanyApp", "CompanyApp\CompanyApp.csproj", "{6C2B87FA-10D0-4B63-9C9A-5FF888AFDAE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
