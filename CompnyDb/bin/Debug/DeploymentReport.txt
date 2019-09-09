@@ -1,0 +1,34 @@
+﻿** Hervorhebungen
+     Tabellen, die neu erstellt werden.
+       Kein
+     Gruppierte Indizes, die gelöscht werden.
+       Kein
+     Gruppierte Indizes, die erstellt werden.
+       Kein
+     Mögliche Datenprobleme
+       Kein
+
+** Benutzeraktionen
+     Erstellen
+       [dbo].[Address] (Tabelle)
+       [dbo].[Company] (Tabelle)
+       [dbo].[Company2Address] (Tabelle)
+       [dbo].[Department] (Tabelle)
+       [dbo].[Employee] (Tabelle)
+       DEFAULT-Einschränkung: unbenannte Einschränkungen auf [dbo].[Address] (DEFAULT-Einschränkung)
+       DEFAULT-Einschränkung: unbenannte Einschränkungen auf [dbo].[Company] (DEFAULT-Einschränkung)
+       DEFAULT-Einschränkung: unbenannte Einschränkungen auf [dbo].[Company2Address] (DEFAULT-Einschränkung)
+       DEFAULT-Einschränkung: unbenannte Einschränkungen auf [dbo].[Department] (DEFAULT-Einschränkung)
+       DEFAULT-Einschränkung: unbenannte Einschränkungen auf [dbo].[Employee] (DEFAULT-Einschränkung)
+       Fremdschlüssel: unbenannte Einschränkungen auf [dbo].[Company2Address] (Fremdschlüssel)
+       Fremdschlüssel: unbenannte Einschränkungen auf [dbo].[Company2Address] (Fremdschlüssel)
+       Fremdschlüssel: unbenannte Einschränkungen auf [dbo].[Department] (Fremdschlüssel)
+       Fremdschlüssel: unbenannte Einschränkungen auf [dbo].[Employee] (Fremdschlüssel)
+       Fremdschlüssel: unbenannte Einschränkungen auf [dbo].[Employee] (Fremdschlüssel)
+       [dbo].[viCompany] (Sicht)
+       [dbo].[spCreateCompany] (Prozedur)
+
+** Unterstützende Aktionen
+
+Die Projekt- und Zieldatenbanken weisen unterschiedliche Sortierungseinstellungen auf. Möglicherweise treten Bereitstellungsfehler auf.
+
