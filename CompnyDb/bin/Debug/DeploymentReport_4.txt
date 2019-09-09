@@ -1,0 +1,23 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       The column [dbo].[Company].[AddressId] is being dropped, data loss could occur.
+
+** User actions
+     Drop
+       unnamed constraint on [dbo].[Company] (Foreign Key)
+     Alter
+       [dbo].[Company] (Table)
+
+** Supporting actions
+     Refresh
+       [dbo].[viCompany] (View)
+
+The column [dbo].[Company].[AddressId] is being dropped, data loss could occur.
+The project and target databases have different collation settings. Deployment errors might occur.
+
