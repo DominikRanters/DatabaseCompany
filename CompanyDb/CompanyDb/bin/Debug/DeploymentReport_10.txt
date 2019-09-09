@@ -1,0 +1,21 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Alter
+       [dbo].[Adress] (Table)
+       [dbo].[spCreateAdress] (Procedure)
+
+** Supporting actions
+     Refresh
+       [dbo].[viAdress] (View)
+
+The project and target databases have different collation settings. Deployment errors might occur.
+

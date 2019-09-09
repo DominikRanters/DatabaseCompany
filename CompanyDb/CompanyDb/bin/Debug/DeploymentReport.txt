@@ -1,0 +1,38 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [dbo].[Adress] (Table)
+       [dbo].[Company] (Table)
+       [dbo].[Company2Adress] (Table)
+       [dbo].[Department] (Table)
+       [dbo].[Employee] (Table)
+       Default Constraint: unnamed constraint on [dbo].[Adress] (Default Constraint)
+       Default Constraint: unnamed constraint on [dbo].[Company] (Default Constraint)
+       Default Constraint: unnamed constraint on [dbo].[Company2Adress] (Default Constraint)
+       Default Constraint: unnamed constraint on [dbo].[Department] (Default Constraint)
+       Default Constraint: unnamed constraint on [dbo].[Employee] (Default Constraint)
+       Foreign Key: unnamed constraint on [dbo].[Adress] (Foreign Key)
+       Foreign Key: unnamed constraint on [dbo].[Company2Adress] (Foreign Key)
+       Foreign Key: unnamed constraint on [dbo].[Company2Adress] (Foreign Key)
+       Foreign Key: unnamed constraint on [dbo].[Department] (Foreign Key)
+       Foreign Key: unnamed constraint on [dbo].[Employee] (Foreign Key)
+       Foreign Key: unnamed constraint on [dbo].[Employee] (Foreign Key)
+       [dbo].[viAdress] (View)
+       [dbo].[viCompany] (View)
+       [dbo].[viDepartment] (View)
+       [dbo].[viEmployee] (View)
+       [dbo].[spCreateCompany] (Procedure)
+
+** Supporting actions
+
+The project and target databases have different collation settings. Deployment errors might occur.
+

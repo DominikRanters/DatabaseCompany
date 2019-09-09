@@ -1,0 +1,26 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Drop
+       unnamed constraint on [dbo].[Employee] (Foreign Key)
+     Alter
+       [dbo].[Employee] (Table)
+
+** Supporting actions
+     Create
+       Foreign Key: unnamed constraint on [dbo].[Employee] (Foreign Key)
+     Refresh
+       [dbo].[viEmployee] (View)
+       [dbo].[spCreateEmployee] (Procedure)
+       [dbo].[spCreateOrUpdateEmployee] (Procedure)
+
+The project and target databases have different collation settings. Deployment errors might occur.
+
