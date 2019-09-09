@@ -32,9 +32,7 @@ namespace CompanyApp.Controller
                     {
                         while (reader.Read())
                         {
-                            Model.Company company;
-
-                            company = new Model.Company();
+                            Model.Company company = new Model.Company();
 
                             company.Id = (int)reader["Id"];
                             company.Name = reader["Name"].ToString();
