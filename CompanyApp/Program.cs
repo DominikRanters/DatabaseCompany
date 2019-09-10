@@ -58,10 +58,7 @@ namespace CompanyApp
 
                             Console.WriteLine("What is the founding date(yyyy-mm-dd)? (can be empty)");
                             input = Console.ReadLine();
-                            if (input != "")
-                                companyModel.FoundedDate = Convert.ToDateTime(input);
-                            else
-                                companyModel.FoundedDate = Convert.ToDateTime("175-01-01");
+                            companyModel.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
                             locationController.Create(companyModel);
 
@@ -73,18 +70,18 @@ namespace CompanyApp
 
                             Console.WriteLine("What is the new company name? (no change then press enter)");
                             companyModel.Name = Console.ReadLine();
+                            companyModel.Name = companyModel.Name == "" ? null : companyModel.Name;
 
                             Console.WriteLine("What is the new founding date? (no change then press enter)");
                             input = Console.ReadLine();
-                            if (input != "")
-                                companyModel.FoundedDate = Convert.ToDateTime(input);
+                            companyModel.FoundedDate =  input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
                             locationController.Update(companyModel);
 
                             break;
 
                         case "delete":
-                            Console.WriteLine("Geben Sie bitte die id  von dem Datensatz an, den sie löschen möchte\n");
+                            Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte\n");
                             id = Convert.ToInt32(Console.ReadLine());
                             locationController.Delete(id);
                             break;
