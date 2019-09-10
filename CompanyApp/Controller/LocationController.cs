@@ -61,11 +61,9 @@ namespace CompanyApp.Controller
                     {
                         if (reader.Read())
                         {
-                    
                             company.Id = (int)reader["Id"];
                             company.Name = reader["Name"].ToString();
-                            company.FoundedDate = reader["FoundedDate"] != DBNull.Value ? Convert.ToDateTime(reader["FoundedDate"]) : DateTime.MinValue;
-                            
+                            company.FoundedDate = reader["FoundedDate"] != DBNull.Value ? Convert.ToDateTime(reader["FoundedDate"]) : DateTime.MinValue;   
                         }
                     }
                 }
