@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CompanyApp.Interface;
+using CompanyApp.Repository;
+using CompanyApp.Model;
 
 namespace CompanyApp.Controller
 {
-    class EmployeeController
+     public class EmployeeController
     {
+        string 
     }
 }
