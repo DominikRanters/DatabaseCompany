@@ -10,13 +10,13 @@ using CompanyApp.Model;
 
 namespace CompanyApp.Controller
 {
-    public class LocationController
+    public class CompanyController
     {
         string dbSConStr = "";
         
         readonly IBaseInterface<Company> _companyRepository = new CompanyRepository();
 
-        public LocationController(string DbSConStr)
+        public CompanyController(string DbSConStr)
         {
             dbSConStr = DbSConStr;
         }

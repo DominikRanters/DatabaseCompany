@@ -53,7 +53,7 @@ namespace CompanyApp.Repository
 
             using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
             {
-                retval = sqlcon.QuerySingle<Company>(selectCmd, parameters);
+                retval = sqlcon.QueryFirst<Company>(selectCmd, parameters);
 
                 //using (SqlCommand cmd = new SqlCommand($"{selectCmd} WHERE id = @id", sqlcon))
                 //{
@@ -96,7 +96,12 @@ namespace CompanyApp.Repository
 
             using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
             {
-                retval = sqlcon.Query<Company>(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure);
+                int id = sqlcon.ExecuteScalar<int>(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure);
+
+                parameters = new DynamicParameters();
+                parameters.Add("@Id", id);
+
+                retval = sqlcon.QueryFirst<Company>($"{selectCmd} WHERE id = @id", parameters);
 
                 //using (SqlCommand cmdCreate = new SqlCommand(spCreateOrUpdate, sqlcon))
                 //{
@@ -133,13 +138,20 @@ namespace CompanyApp.Repository
 
             using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
             {
-                using (SqlCommand cmd = new SqlCommand(deleteCmd, sqlcon))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    sqlcon.Open();
-                    var result = cmd.ExecuteNonQuery();
-                    retval = (result == 1);
-                }
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@id", id);
+
+                var result = sqlcon.Execute(deleteCmd, parameters);
+                retval = (result == 1);
+
+
+                //using (SqlCommand cmd = new SqlCommand(deleteCmd, sqlcon))
+                //{
+                //    cmd.Parameters.AddWithValue("@id", id);
+                //    sqlcon.Open();
+                //    var result = cmd.ExecuteNonQuery();
+                //    retval = (result == 1);
+                //}
             }
 
             return retval;
