@@ -73,7 +73,7 @@
     <Build Include="View\viEmployee.sql" />
     <Build Include="View\viAddress.sql" />
     <Build Include="SP\spAddDepartment.sql" />
-    <Build Include="SP\spCreateOrUpdsteEmployee.sql" />
+    <Build Include="SP\spCreateOrUpdateEmployee.sql" />
     <Build Include="SP\spCreateOrUpdateCompany.sql" />
   </ItemGroup>
   <ItemGroup>
