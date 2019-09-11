@@ -12,7 +12,7 @@ namespace CompanyApp
             string input, action;
             int id = 0;
 
-            Controller.LocationController locationController = new Controller.LocationController(CONSTRING_TAPPQA);
+            Controller.CompanyController companyController = new Controller.CompanyController(CONSTRING_TAPPQA);
             //Controller.EmployeeController employeeController = new Controller.EmployeeController(CONSTRING_TAPPQA);
 
             Console.WriteLine("An welcher Tabelle wollen Sie was ändern? (Company, Employee, Address)");
@@ -40,7 +40,7 @@ namespace CompanyApp
                             switch(action.ToLower())
                             {
                                 case "all":
-                                    var companies = locationController.Read();
+                                    var companies = companyController.Read();
                                     foreach (var company in companies)
                                     {
                                         Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
@@ -48,7 +48,7 @@ namespace CompanyApp
                                     break;
 
                                 default:
-                                    companyData = locationController.Read(Convert.ToInt32(action));
+                                    companyData = companyController.Read(Convert.ToInt32(action));
                                     Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
                                     break;
 
@@ -63,7 +63,7 @@ namespace CompanyApp
                             input = Console.ReadLine();
                             companyModel.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                            companyData = locationController.Create(companyModel);
+                            companyData = companyController.Create(companyModel);
                             Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
 
                             break;
@@ -81,7 +81,7 @@ namespace CompanyApp
                             companyModel.FoundedDate =  input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
                             
-                            companyData = locationController.Update(companyModel);
+                            companyData = companyController.Update(companyModel);
                             Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
 
                             break;
@@ -89,7 +89,7 @@ namespace CompanyApp
                         case "delete":
                             Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte");
                             id = Convert.ToInt32(Console.ReadLine());
-                            locationController.Delete(id);
+                            companyController.Delete(id);
                             break;
                     }
                     #endregion
@@ -196,9 +196,6 @@ namespace CompanyApp
                 case "address":
                     break;
             }
-
-            
-
 
 
             Console.WriteLine("\nPress Enter to quit");
