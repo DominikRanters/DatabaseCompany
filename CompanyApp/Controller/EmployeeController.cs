@@ -7,8 +7,8 @@ using CompanyApp.Model;
 
 namespace CompanyApp.Controller
 {
-     public class EmployeeController
+    public class EmployeeController
     {
-        string 
+        string
     }
 }
