@@ -7,8 +7,12 @@ using CompanyApp.Model;
 
 namespace CompanyApp.Controller
 {
-     public class EmployeeController
+    public class EmployeeController
     {
+<<<<<<< HEAD
         string dbConStr = "";
+=======
+        string
+>>>>>>> develop
     }
 }

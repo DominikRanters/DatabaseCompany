@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spCreateOrUpdsteEmployee]
+﻿CREATE PROCEDURE [dbo].[spCreateOrUpdateEmployee]
 	@EmployeeId int = 0, 
     @FirstName nvarchar(128), 
     @LastName nvarchar(128), 
@@ -37,4 +37,4 @@ AS
 			WHERE		@dbId = Employee.id;
       end 
 
-RETURN	@dbId
+SELECT	@dbId
