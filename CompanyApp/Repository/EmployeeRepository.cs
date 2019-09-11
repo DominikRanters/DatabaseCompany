@@ -9,11 +9,7 @@ using Dapper;
 
 namespace CompanyApp.Repository
 {
-<<<<<<< HEAD
-    public class EmployeeRepository
-=======
     public class EmployeeRepository : IBaseInterface<Employee>
->>>>>>> develop
     {
         string dbConStr = "";
         string selcetCmd = "SELECT Id, Name, FoundedDate FROM viEmployee";
