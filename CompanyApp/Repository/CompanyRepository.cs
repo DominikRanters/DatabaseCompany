@@ -15,6 +15,7 @@ namespace CompanyApp.Repository
         string selectCmd = "select Id, Name, FoundedDate from viCompany";
         string deleteCmd = "update company set DeleteTime = GetDate() where Id = @id";
         string spCreateOrUpdate = "spCreateOrUpdateCompany";
+
         public CompanyRepository(string dbConnectionStr)
         {
             dbConStr = dbConnectionStr;
