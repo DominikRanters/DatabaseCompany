@@ -15,8 +15,6 @@ namespace CompanyApp.Repository
         string selectCmd = "select Id, Name, FoundedDate from viCompany";
         string deleteCmd = "update company set DeleteTime = GetDate() where Id = @id";
         string spCreateOrUpdate = "spCreateOrUpdateCompany";
-
-
         public CompanyRepository(string dbConnectionStr)
         {
             dbConStr = dbConnectionStr;
@@ -40,7 +38,6 @@ namespace CompanyApp.Repository
                 return sqlcon.QueryFirst<Company>($"{selectCmd} WHERE Id = @id", parameters);
             }
         }
-
         public Company Create(Company company)
         {
             return CreateOrUpdate(company);
