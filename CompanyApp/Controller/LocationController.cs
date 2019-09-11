@@ -3,132 +3,47 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
+using CompanyApp.Interface;
+using CompanyApp.Repository;
+using CompanyApp.Model;
+
 
 namespace CompanyApp.Controller
 {
-    class LocationController
+    public class LocationController
     {
         string dbSConStr = "";
-        string selectCmd = "select Id, Name, FoundedDate from viCompany";
-        string deleteCmd = "update company set DeleteTime = GetDate() where id = @id";
-        string spCreateOrUpdate = "spCreateOrUpdateCompany";
+        
+        readonly IBaseInterface<Company> _companyRepository = new CompanyRepository();
 
         public LocationController(string DbSConStr)
         {
             dbSConStr = DbSConStr;
         }
 
-        public List<Model.Company> Read()
+        public List<Company> Read()
         {
-            List<Model.Company> retval = new List<Model.Company>();
-
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
-            {
-                using (SqlCommand cmd = new SqlCommand(selectCmd, sqlcon))
-                {
-                    sqlcon.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Model.Company company = new Model.Company();
-
-                            company.Id = (int)reader["Id"];
-                            company.Name = reader["Name"].ToString();
-                            company.FoundedDate = reader["FoundedDate"] != DBNull.Value ? Convert.ToDateTime(reader["FoundedDate"]) : DateTime.MinValue;
-                            retval.Add(company);
-                        }
-                    }
-                }
-            }
-
-            return retval;
+            return _companyRepository.Read(dbSConStr);
         }
 
-        public Model.Company Read(int id)
+        public Company Read(int id)
         {
-            Model.Company company = new Model.Company();
-
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
-            {
-                using (SqlCommand cmd = new SqlCommand($"{selectCmd} WHERE id = @id", sqlcon))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    sqlcon.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            company.Id = (int)reader["Id"];
-                            company.Name = reader["Name"].ToString();
-                            company.FoundedDate = reader["FoundedDate"] != DBNull.Value ? Convert.ToDateTime(reader["FoundedDate"]) : DateTime.MinValue;   
-                        }
-                    }
-                }
-            }
-
-            return company;
+            return _companyRepository.Read(dbSConStr, id);
         }
 
-        public bool Create(Model.Company company)
+        public Company Create(Company company)
         {
-            bool retval = false;
-
-            retval = CreateOrUpdate(company);
-
-            return retval;
+            return _companyRepository.Create(dbSConStr, company);
         }
 
-        public bool Update(Model.Company company)
+        public Company Update(Company company)
         {
-            bool retval = false;
-
-            retval = CreateOrUpdate(company);
-
-            return retval;
+            return _companyRepository.Update(dbSConStr, company);
         }
-
-        private bool CreateOrUpdate(Model.Company company)
-        {
-            bool retval = false;
-
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
-            {
-                using (SqlCommand cmd = new SqlCommand(spCreateOrUpdate, sqlcon))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@CompanyId", company.Id);
-                    cmd.Parameters.AddWithValue("@Name", company.Name);
-                    cmd.Parameters.AddWithValue("@FoundedDate", company.FoundedDate);
-
-                    sqlcon.Open();
-                    var result = cmd.ExecuteNonQuery();
-                    retval = (result == 1);
-                }
-            }
-
-            return retval;
-        }
-
 
         public bool Delete(int id = 0)
         {
-            bool retval = false;
-
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
-            {
-                using (SqlCommand cmd = new SqlCommand(deleteCmd, sqlcon))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    sqlcon.Open();
-                    var result = cmd.ExecuteNonQuery();
-                    retval = (result == 1);
-                }
-            }
-
-            return retval;
+            return _companyRepository.Delete(dbSConStr, id);
         }
 
     }

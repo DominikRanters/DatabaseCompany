@@ -1,0 +1,149 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
+using System.Text;
+using CompanyApp.Interface;
+using CompanyApp.Model;
+using Dapper;
+
+namespace CompanyApp.Repository
+{
+    public class CompanyRepository : IBaseInterface<Company>
+    {
+        string selectCmd = "select Id, Name, FoundedDate from viCompany";
+        string deleteCmd = "update company set DeleteTime = GetDate() where id = @id";
+        string spCreateOrUpdate = "spCreateOrUpdateCompany";
+
+        public List<Company> Read(string dbSConStr)
+        {
+            List<Company> retval = new List<Company>();
+
+            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            {
+                retval = sqlcon.Query<Company>(selectCmd).AsList();
+
+                //using (SqlCommand cmd = new SqlCommand(selectCmd, sqlcon))
+                //{
+                //    sqlcon.Open();
+
+                //    using (SqlDataReader reader = cmd.ExecuteReader())
+                //    {
+                //        while (reader.Read())
+                //        {
+                //            Company company = new Company();
+
+                //            company.Id = (int)reader["Id"];
+                //            company.Name = reader["Name"].ToString();
+                //            company.FoundedDate = reader["FoundedDate"] != DBNull.Value ? Convert.ToDateTime(reader["FoundedDate"]) : DateTime.MinValue;
+                //            retval.Add(company);
+                //        }
+                //    }
+                //}
+            }
+            return retval;
+        }
+
+        public Company Read(string dbSConStr, int id)
+        {
+            Company retval = new Company();
+
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@Id", id);
+
+            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            {
+                retval = sqlcon.QuerySingle<Company>(selectCmd, parameters);
+
+                //using (SqlCommand cmd = new SqlCommand($"{selectCmd} WHERE id = @id", sqlcon))
+                //{
+                //    cmd.Parameters.AddWithValue("@id", id);
+                //    sqlcon.Open();
+
+                //    using (SqlDataReader reader = cmd.ExecuteReader())
+                //    {
+                //        if (reader.Read())
+                //        {
+                //            company.Id = (int)reader["Id"];
+                //            company.Name = reader["Name"].ToString();
+                //            company.FoundedDate = reader["FoundedDate"] != DBNull.Value ? Convert.ToDateTime(reader["FoundedDate"]) : DateTime.MinValue;
+                //        }
+                //    }
+                //}
+            }
+
+            return retval;
+        }
+
+        public Company Create(string dbSConStr, Company company)
+        {
+            return CreateOrUpdate(dbSConStr, company);
+        }
+
+        public Company Update(string dbSConStr, Company company)
+        {
+            return CreateOrUpdate(dbSConStr, company);
+        }
+
+        private Company CreateOrUpdate(string dbSConStr, Company company)
+        {
+            Company retval = new Company();
+
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@CompanyId", company.Id);
+            parameters.Add("@Name", company.Name);
+            parameters.Add("@FoundedDate", company.FoundedDate);
+
+            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            {
+                retval = sqlcon.Query<Company>(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure);
+
+                //using (SqlCommand cmdCreate = new SqlCommand(spCreateOrUpdate, sqlcon))
+                //{
+                //    cmdCreate.CommandType = CommandType.StoredProcedure;
+                //    cmdCreate.Parameters.AddWithValue("@CompanyId", company.Id);
+                //    cmdCreate.Parameters.AddWithValue("@Name", company.Name);
+                //    cmdCreate.Parameters.AddWithValue("@FoundedDate", company.FoundedDate);
+
+                //    sqlcon.Open();
+                //    int id = (int)cmdCreate.ExecuteScalar();
+
+                //    using (SqlCommand cmdRead = new SqlCommand($"{selectCmd} WHERE id = @id", sqlcon))
+                //    {
+                //        cmdRead.Parameters.AddWithValue("@id", id);
+
+                //        using (SqlDataReader reader = cmdRead.ExecuteReader())
+                //        {
+                //            if (reader.Read())
+                //            {
+                //                retval.Id = (int)reader["Id"];
+                //                retval.Name = reader["Name"].ToString();
+                //                retval.FoundedDate = reader["FoundedDate"] != DBNull.Value ? Convert.ToDateTime(reader["FoundedDate"]) : DateTime.MinValue;
+                //            }
+                //        }
+                //    }
+                //}
+            }
+            return retval;
+        }
+
+        public bool Delete(string dbSConStr, int id = 0)
+        {
+            bool retval = false;
+
+            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            {
+                using (SqlCommand cmd = new SqlCommand(deleteCmd, sqlcon))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    sqlcon.Open();
+                    var result = cmd.ExecuteNonQuery();
+                    retval = (result == 1);
+                }
+            }
+
+            return retval;
+        }
+
+    }
+}

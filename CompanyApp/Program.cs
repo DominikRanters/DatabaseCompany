@@ -1,4 +1,5 @@
 ﻿using System;
+using CompanyApp.Model;
 
 namespace CompanyApp
 {
@@ -22,8 +23,10 @@ namespace CompanyApp
                 case "company":
                     // Company
                     #region Company
-                    Model.Company companyModel = new Model.Company();
-                    
+                    Company companyModel = new Company();
+                    Company companyData;
+
+
                     Console.WriteLine("What would you do? (Read, Create, Update, Delete)");
                     action = Console.ReadLine();
 
@@ -45,7 +48,7 @@ namespace CompanyApp
                                     break;
 
                                 default:
-                                    Model.Company companyData = locationController.Read(Convert.ToInt32(action));
+                                    companyData = locationController.Read(Convert.ToInt32(action));
                                     Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
                                     break;
 
@@ -60,7 +63,8 @@ namespace CompanyApp
                             input = Console.ReadLine();
                             companyModel.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                            locationController.Create(companyModel);
+                            companyData = locationController.Create(companyModel);
+                            Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
 
                             break;
 
@@ -76,12 +80,14 @@ namespace CompanyApp
                             input = Console.ReadLine();
                             companyModel.FoundedDate =  input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                            locationController.Update(companyModel);
+                            
+                            companyData = locationController.Update(companyModel);
+                            Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
 
                             break;
 
                         case "delete":
-                            Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte\n");
+                            Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte");
                             id = Convert.ToInt32(Console.ReadLine());
                             locationController.Delete(id);
                             break;
