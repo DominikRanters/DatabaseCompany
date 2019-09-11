@@ -12,7 +12,7 @@ namespace CompanyApp.Repository
     public class EmployeeRepository : IBaseInterface<Employee>
     {
         string dbConStr = "";
-        string selcetCmd = "SELECT Id, Name, FoundedDate FROM viEmployee";
+        string selcetCmd = "SELECT Id, FirstName, LastName, Birthday, DepartmentId, AddressId FROM Employee";
         string deleteCmd = "UPDATE employee SET DeleteTime = GetDate() WHERE @Id = Id";
         string spCreateOrUpdate = "spCreateOrUpateEmployee";
 

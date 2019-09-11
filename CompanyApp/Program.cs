@@ -23,8 +23,7 @@ namespace CompanyApp
                 case "company":
                     // Company
                     #region Company
-                    Company companyModel = new Company();
-                    Company companyData;
+                    Company company = new Company();
 
 
                     Console.WriteLine("What would you do? (Read, Create, Update, Delete)");
@@ -41,15 +40,15 @@ namespace CompanyApp
                             {
                                 case "all":
                                     var companies = companyController.Read();
-                                    foreach (var company in companies)
+                                    foreach (var companyItem in companies)
                                     {
-                                        Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
+                                        Console.WriteLine($"id={companyItem.Id}, name={companyItem.Name}, foudedDate={companyItem.FoundedDate}");
                                     }
                                     break;
 
                                 default:
-                                    companyData = companyController.Read(Convert.ToInt32(action));
-                                    Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
+                                    company = companyController.Read(Convert.ToInt32(action));
+                                    Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
                                     break;
 
                             }
@@ -57,32 +56,32 @@ namespace CompanyApp
 
                         case "create":
                             Console.WriteLine("What is the company name?");
-                            companyModel.Name = Console.ReadLine();
+                            company.Name = Console.ReadLine();
 
                             Console.WriteLine("What is the founding date(yyyy-mm-dd)? (can be empty)");
                             input = Console.ReadLine();
-                            companyModel.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
+                            company.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                            companyData = companyController.Create(companyModel);
-                            Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
+                            company = companyController.Create(company);
+                            Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
 
                             break;
 
                         case "update":
                             Console.WriteLine("Enter the ID of the company you want to change");
-                            companyModel.Id = Convert.ToInt32(Console.ReadLine());
+                            company.Id = Convert.ToInt32(Console.ReadLine());
 
                             Console.WriteLine("What is the new company name? (no change then press enter)");
-                            companyModel.Name = Console.ReadLine();
-                            companyModel.Name = companyModel.Name == "" ? null : companyModel.Name;
+                            company.Name = Console.ReadLine();
+                            company.Name = company.Name == "" ? null : company.Name;
 
-                            Console.WriteLine("What is the new founding date? (no change then press enter)");
+                            Console.WriteLine("What is the new founding date(yyyy-mm-dd)? (no change then press enter)");
                             input = Console.ReadLine();
-                            companyModel.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
+                            company.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
 
-                            companyData = companyController.Update(companyModel);
-                            Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
+                            company = companyController.Update(company);
+                            Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
 
                             break;
 
@@ -98,8 +97,7 @@ namespace CompanyApp
                 case "employee":
                     // Employee
                     #region Employee
-                    Employee employeeModel = new Employee();
-                    Employee employeeData;
+                    Employee employee = new Employee();
 
                     Console.WriteLine("What would you do? (Read, Create, Update, Delete)");
                     action = Console.ReadLine();
@@ -114,58 +112,81 @@ namespace CompanyApp
                             switch (action.ToLower())
                             {
                                 case "all":
+                                    Console.WriteLine();
                                     var employees = employeeController.Read();
-                                    foreach (var employee in employees)
+                                    foreach (var employeeItem in employees)
                                     {
-                                        Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
-                                                            $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
+                                        Console.WriteLine($"Id={employeeItem.Id}, FirstName={employeeItem.FirstName}, LastName={employeeItem.LastName}" +
+                                                            $", Birthday={employeeItem.Birthday}, DepartmentId={employeeItem.DepartmentId}, AdressId={employeeItem.AddressId}");
                                     }
                                     break;
 
                                 default:
-                                    employeeData = employeeController.Read(Convert.ToInt32(action));
-                                    Console.WriteLine($"\nId={employeeData.Id}, FirstName={employeeData.FirstName}, LastName={employeeData.LastName}" +
-                                                        $", Birthday={employeeData.Birthday}, DepartmentId={employeeData.DepartmentId}, AdressId={employeeData.AddressId}");
+                                    employee = employeeController.Read(Convert.ToInt32(action));
+                                    Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
                                     break;
 
                             }
                             break;
 
                         case "create":
-                            Console.WriteLine("What is the company name?");
-                            companyModel.Name = Console.ReadLine();
+                            Console.WriteLine("\nfirst name");
+                            employee.FirstName = Console.ReadLine();
 
-                            Console.WriteLine("What is the founding date(yyyy-mm-dd)? (can be empty)");
+                            Console.WriteLine("\nlast name");
+                            employee.LastName = Console.ReadLine();
+
+                            Console.WriteLine("\nbirthday (yyyy-mm-dd) (can be empty)");
                             input = Console.ReadLine();
-                            companyModel.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
+                            employee.Birthday = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                            companyData = companyController.Create(companyModel);
-                            Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
+                            Console.WriteLine("\ndepartment id");
+                            employee.DepartmentId = Convert.ToInt32(Console.ReadLine());
+
+                            Console.WriteLine("\naddress id (can be empty)");
+                            employee.AddressId = Convert.ToInt32(Console.ReadLine());
+
+                            employee = employeeController.Create(employee);
+                            Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
 
                             break;
 
                         case "update":
-                            Console.WriteLine("Enter the ID of the company you want to change");
-                            companyModel.Id = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter the ID of the employee you want to change");
+                            employee.Id = Convert.ToInt32(Console.ReadLine());
 
-                            Console.WriteLine("What is the new company name? (no change then press enter)");
-                            companyModel.Name = Console.ReadLine();
-                            companyModel.Name = companyModel.Name == "" ? null : companyModel.Name;
+                            Console.WriteLine("\nfirst name (no change then press enter)");
+                            employee.FirstName = Console.ReadLine();
 
-                            Console.WriteLine("What is the new founding date? (no change then press enter)");
+                            Console.WriteLine("\nlast name (no change then press enter)");
+                            employee.LastName = Console.ReadLine();
+
+                            Console.WriteLine("\nbirthday (yyyy-mm-dd)  (no change then press enter)");
                             input = Console.ReadLine();
-                            companyModel.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
+                            employee.Birthday = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
+                            Console.WriteLine("\ndepartment id (no change then press enter)");
+                            employee.DepartmentId = Convert.ToInt32(Console.ReadLine());
 
-                            companyData = companyController.Update(companyModel);
-                            Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
+                            Console.WriteLine("\naddress id (no change then press enter)");
+                            employee.AddressId = Convert.ToInt32(Console.ReadLine());
+
+                            employee = employeeController.Create(employee);
+                            Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
+
+                            employee = employeeController.Update(employee);
+                            Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
 
                             break;
 
                         case "delete":
                             Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte");
                             id = Convert.ToInt32(Console.ReadLine());
-                            companyController.Delete(id);
+                            employeeController.Delete(id);
                             break;
                     }
                     #endregion
