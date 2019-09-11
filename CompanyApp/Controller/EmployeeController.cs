@@ -9,6 +9,6 @@ namespace CompanyApp.Controller
 {
      public class EmployeeController
     {
-        string 
+        string dbConStr = "";
     }
 }

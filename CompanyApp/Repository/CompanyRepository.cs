@@ -15,11 +15,11 @@ namespace CompanyApp.Repository
         string deleteCmd = "update company set DeleteTime = GetDate() where id = @id";
         string spCreateOrUpdate = "spCreateOrUpdateCompany";
 
-        public List<Company> Read(string dbSConStr)
+        public List<Company> Read(string dbConStr)
         {
             List<Company> retval = new List<Company>();
 
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            using (SqlConnection sqlcon = new SqlConnection(dbConStr))
             {
                 retval = sqlcon.Query<Company>(selectCmd).AsList();
 
@@ -44,14 +44,14 @@ namespace CompanyApp.Repository
             return retval;
         }
 
-        public Company Read(string dbSConStr, int id)
+        public Company Read(string dbConStr, int id)
         {
             Company retval = new Company();
 
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@Id", id);
 
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            using (SqlConnection sqlcon = new SqlConnection(dbConStr))
             {
                 retval = sqlcon.QueryFirst<Company>(selectCmd, parameters);
 
@@ -75,17 +75,17 @@ namespace CompanyApp.Repository
             return retval;
         }
 
-        public Company Create(string dbSConStr, Company company)
+        public Company Create(string dbConStr, Company company)
         {
-            return CreateOrUpdate(dbSConStr, company);
+            return CreateOrUpdate(dbConStr, company);
         }
 
-        public Company Update(string dbSConStr, Company company)
+        public Company Update(string dbConStr, Company company)
         {
-            return CreateOrUpdate(dbSConStr, company);
+            return CreateOrUpdate(dbConStr, company);
         }
 
-        private Company CreateOrUpdate(string dbSConStr, Company company)
+        private Company CreateOrUpdate(string dbConStr, Company company)
         {
             Company retval = new Company();
 
@@ -94,7 +94,7 @@ namespace CompanyApp.Repository
             parameters.Add("@Name", company.Name);
             parameters.Add("@FoundedDate", company.FoundedDate);
 
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            using (SqlConnection sqlcon = new SqlConnection(dbConStr))
             {
                 int id = sqlcon.ExecuteScalar<int>(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure);
 
@@ -132,11 +132,11 @@ namespace CompanyApp.Repository
             return retval;
         }
 
-        public bool Delete(string dbSConStr, int id = 0)
+        public bool Delete(string dbConStr, int id = 0)
         {
             bool retval = false;
 
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            using (SqlConnection sqlcon = new SqlConnection(dbConStr))
             {
                 DynamicParameters parameters = new DynamicParameters();
                 parameters.Add("@id", id);

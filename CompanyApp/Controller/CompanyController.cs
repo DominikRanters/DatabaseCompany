@@ -12,38 +12,38 @@ namespace CompanyApp.Controller
 {
     public class CompanyController
     {
-        string dbSConStr = "";
+        string dbConStr = "";
         
         readonly IBaseInterface<Company> _companyRepository = new CompanyRepository();
 
-        public CompanyController(string DbSConStr)
+        public CompanyController(string dbConnectingStr)
         {
-            dbSConStr = DbSConStr;
+            dbConStr = dbConnectingStr;
         }
 
         public List<Company> Read()
         {
-            return _companyRepository.Read(dbSConStr);
+            return _companyRepository.Read(dbConStr);
         }
 
         public Company Read(int id)
         {
-            return _companyRepository.Read(dbSConStr, id);
+            return _companyRepository.Read(dbConStr, id);
         }
 
         public Company Create(Company company)
         {
-            return _companyRepository.Create(dbSConStr, company);
+            return _companyRepository.Create(dbConStr, company);
         }
 
         public Company Update(Company company)
         {
-            return _companyRepository.Update(dbSConStr, company);
+            return _companyRepository.Update(dbConStr, company);
         }
 
         public bool Delete(int id = 0)
         {
-            return _companyRepository.Delete(dbSConStr, id);
+            return _companyRepository.Delete(dbConStr, id);
         }
 
     }
