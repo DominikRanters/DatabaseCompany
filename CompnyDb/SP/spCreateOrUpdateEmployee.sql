@@ -37,4 +37,4 @@ AS
 			WHERE		@dbId = Employee.id;
       end 
 
-RETURN	@dbId
+SELECT	@dbId

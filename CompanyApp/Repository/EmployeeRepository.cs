@@ -11,48 +11,76 @@ namespace CompanyApp.Repository
 {
     public class EmployeeRepository : IBaseInterface<Employee>
     {
+        string dbConStr = "";
         string selcetCmd = "SELECT Id, Name, FoundedDate FROM viEmployee";
-        string deleteCmd = "UPDATE employee SET DeleteTime = GetDate() WHERE @id = Id";
+        string deleteCmd = "UPDATE employee SET DeleteTime = GetDate() WHERE @Id = Id";
         string spCreateOrUpdate = "spCreateOrUpateEmployee";
 
-        public List<Employee> Read(string dbSConStr)
+        public EmployeeRepository(string dbConnectionStr)
         {
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            dbConStr = dbConnectionStr;
+        }
+
+        public List<Employee> Read()
+        {
+            using (SqlConnection sqlcon = new SqlConnection(dbConStr))
             {
-               return sqlcon.Query<Employee>(selcetCmd).AsList();
+                return sqlcon.Query<Employee>(selcetCmd).AsList();
             }
         }
 
-        public Employee Read(string dbSConStr, int id)
+        public Employee Read(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@id", id);
+            parameters.Add("@Id", id);
 
-            using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
+            using (SqlConnection sqlcon = new SqlConnection(dbConStr))
             {
+                return sqlcon.QueryFirst<Employee>($"{selcetCmd} WHERE @Id = Id", parameters);
+            }
+        }
+
+        public Employee Create(Employee employee)
+        {
+            return CreateOrUpdate(employee);
+        }
+
+        public Employee Update(Employee employee)
+        {
+            return CreateOrUpdate(employee);
+        }
+
+        private Employee CreateOrUpdate(Employee employee)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@EmployeeId", employee.Id);
+            parameters.Add("@FirstName", employee.FirstName);
+            parameters.Add("@LastName", employee.LastName);
+            parameters.Add("@BirthDay", employee.Birthday);
+            parameters.Add("@DepartmentId", employee.DepartmentId);
+            parameters.Add("@AdressId", employee.AddressId);
+
+            using (SqlConnection sqlcon = new SqlConnection(dbConStr))
+            {
+                int id = sqlcon.ExecuteScalar<int>(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure);
+
+                parameters = new DynamicParameters();
+                parameters.Add("@Id", id);
+
                 return sqlcon.QueryFirst<Employee>($"{selcetCmd} WHERE @id = Id", parameters);
             }
         }
 
-        public Employee Create(string dbSConStr, Employee data)
+        public bool Delete(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@Id", id);
 
-        }
+            using(SqlConnection sqlcon = new SqlConnection(dbConStr))
+            {
+                return 1 == (sqlcon.Execute(deleteCmd, parameters));
 
-        public Employee Update(string dbSConStr, Employee data)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Employee createOrUpdate(string dbConStr, Employee data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Delete(string dbSConStr, int id)
-        {
-            throw new NotImplementedException();
+            }
         }
     }
 }
