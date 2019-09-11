@@ -21,7 +21,7 @@ namespace CompanyApp.Repository
 
             using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
             {
-                retval = sqlcon.Query<Company>(selectCmd).AsList();
+                return retval = sqlcon.Query<Company>(selectCmd).AsList();
 
                 //using (SqlCommand cmd = new SqlCommand(selectCmd, sqlcon))
                 //{
@@ -41,7 +41,7 @@ namespace CompanyApp.Repository
                 //    }
                 //}
             }
-            return retval;
+            //return retval;
         }
 
         public Company Read(string dbSConStr, int id)
@@ -53,7 +53,7 @@ namespace CompanyApp.Repository
 
             using (SqlConnection sqlcon = new SqlConnection(dbSConStr))
             {
-                retval = sqlcon.QueryFirst<Company>(selectCmd, parameters);
+                return retval = sqlcon.QueryFirst<Company>(selectCmd, parameters);
 
                 //using (SqlCommand cmd = new SqlCommand($"{selectCmd} WHERE id = @id", sqlcon))
                 //{
@@ -72,7 +72,7 @@ namespace CompanyApp.Repository
                 //}
             }
 
-            return retval;
+            //return retval;
         }
 
         public Company Create(string dbSConStr, Company company)
