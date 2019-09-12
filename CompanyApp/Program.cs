@@ -9,52 +9,51 @@ namespace CompanyApp
         static void Main(string[] args)
         {
             // Variables
-            string input, action;
-            int id = 0;
+            string input;
+            int id = 0, action;
 
             Controller.CompanyController companyController = new Controller.CompanyController(CONSTRING_TAPPQA);
             Controller.EmployeeController employeeController = new Controller.EmployeeController(CONSTRING_TAPPQA);
 
-            Console.WriteLine("An welcher Tabelle wollen Sie was ändern? (Company, Employee, Address)");
-            action = Console.ReadLine();
+            Console.WriteLine("An welcher Tabelle wollen Sie was ändern?");
+            Console.WriteLine("1) Comnpany");
+            Console.WriteLine("2) Employee");
+            Console.WriteLine("3) Address");
+            action = Convert.ToInt32(Console.ReadLine());
 
-            switch (action.ToLower())
+            switch (action)
             {
-                case "company":
+                case 1:
                     // Company
                     #region Company
                     Company company = new Company();
 
+                    Console.WriteLine("What would you do?");
+                    Console.WriteLine("1) Read all");
+                    Console.WriteLine("2) Read id");
+                    Console.WriteLine("3) Create");
+                    Console.WriteLine("4) Update");
+                    Console.WriteLine("5) Delete");
+                    action = Convert.ToInt32(Console.ReadLine());
 
-                    Console.WriteLine("What would you do? (Read, Create, Update, Delete)");
-                    action = Console.ReadLine();
-
-                    switch (action.ToLower())
+                    switch (action)
                     {
-                        case "read":
-                            Console.WriteLine("All column or search a id? ('All' or the id you search for)");
-                            action = Console.ReadLine();
-                            Console.WriteLine();
-
-                            switch (action.ToLower())
+                        case 1:
+                            var companies = companyController.Read();
+                            foreach (var companyItem in companies)
                             {
-                                case "all":
-                                    var companies = companyController.Read();
-                                    foreach (var companyItem in companies)
-                                    {
-                                        Console.WriteLine($"id={companyItem.Id}, name={companyItem.Name}, foudedDate={companyItem.FoundedDate}");
-                                    }
-                                    break;
-
-                                default:
-                                    company = companyController.Read(Convert.ToInt32(action));
-                                    Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
-                                    break;
-
+                                Console.WriteLine($"id={companyItem.Id}, name={companyItem.Name}, foudedDate={companyItem.FoundedDate}");
                             }
                             break;
 
-                        case "create":
+                        case 2:
+                            Console.WriteLine("Geben Sie bitte die id ein");
+                            id = Convert.ToInt32(Console.ReadLine());
+                            company = companyController.Read(id);
+                            Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
+                            break;
+
+                        case 3:
                             Console.WriteLine("What is the company name?");
                             company.Name = Console.ReadLine();
 
@@ -64,10 +63,9 @@ namespace CompanyApp
 
                             company = companyController.Create(company);
                             Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
-
                             break;
 
-                        case "update":
+                        case 4:
                             Console.WriteLine("Enter the ID of the company you want to change");
                             company.Id = Convert.ToInt32(Console.ReadLine());
 
@@ -82,10 +80,9 @@ namespace CompanyApp
 
                             company = companyController.Update(company);
                             Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
-
                             break;
 
-                        case "delete":
+                        case 5:
                             Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte");
                             id = Convert.ToInt32(Console.ReadLine());
                             companyController.Delete(id);
@@ -94,43 +91,41 @@ namespace CompanyApp
                     #endregion
                     break;
 
-                case "employee":
+                case 2:
                     // Employee
                     #region Employee
                     Employee employee = new Employee();
 
-                    Console.WriteLine("What would you do? (Read, Create, Update, Delete)");
-                    action = Console.ReadLine();
+                    Console.WriteLine("An welcher Tabelle wollen Sie was ändern?");
+                    Console.WriteLine("1) Read all");
+                    Console.WriteLine("2) Read id");
+                    Console.WriteLine("3) Create");
+                    Console.WriteLine("4) Update");
+                    Console.WriteLine("5) Delete");
+                    action = Convert.ToInt32(Console.ReadLine());
 
-                    switch (action.ToLower())
+                    switch (action)
                     {
-                        case "read":
-
-                            Console.WriteLine("All column or search a id? ('All' or the id you search for)");
-                            action = Console.ReadLine();
-
-                            switch (action.ToLower())
+                        case 1:
+                            Console.WriteLine();
+                            var employees = employeeController.Read();
+                            foreach (var employeeItem in employees)
                             {
-                                case "all":
-                                    Console.WriteLine();
-                                    var employees = employeeController.Read();
-                                    foreach (var employeeItem in employees)
-                                    {
-                                        Console.WriteLine($"Id={employeeItem.Id}, FirstName={employeeItem.FirstName}, LastName={employeeItem.LastName}" +
-                                                            $", Birthday={employeeItem.Birthday}, DepartmentId={employeeItem.DepartmentId}, AdressId={employeeItem.AddressId}");
-                                    }
-                                    break;
-
-                                default:
-                                    employee = employeeController.Read(Convert.ToInt32(action));
-                                    Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
-                                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
-                                    break;
-
+                                Console.WriteLine($"Id={employeeItem.Id}, FirstName={employeeItem.FirstName}, LastName={employeeItem.LastName}" +
+                                                    $", Birthday={employeeItem.Birthday}, DepartmentId={employeeItem.DepartmentId}, AdressId={employeeItem.AddressId}");
                             }
                             break;
 
-                        case "create":
+                        case 2:
+                            Console.WriteLine("Geben Sie bitte die id ein");
+                            id = Convert.ToInt32(Console.ReadLine());
+
+                            employee = employeeController.Read(id);
+                            Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
+                            break;
+
+                        case 3:
                             Console.WriteLine("\nfirst name");
                             employee.FirstName = Console.ReadLine();
 
@@ -150,10 +145,9 @@ namespace CompanyApp
                             employee = employeeController.Create(employee);
                             Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
                                                         $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
-
                             break;
 
-                        case "update":
+                        case 4:
                             Console.WriteLine("Enter the ID of the employee you want to change");
                             employee.Id = Convert.ToInt32(Console.ReadLine());
 
@@ -180,10 +174,9 @@ namespace CompanyApp
                             employee = employeeController.Update(employee);
                             Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
                                                         $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
-
                             break;
 
-                        case "delete":
+                        case 5:
                             Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte");
                             id = Convert.ToInt32(Console.ReadLine());
                             employeeController.Delete(id);
@@ -192,7 +185,7 @@ namespace CompanyApp
                     #endregion
                     break;
 
-                case "address":
+                case 3:
                     break;
             }
 
