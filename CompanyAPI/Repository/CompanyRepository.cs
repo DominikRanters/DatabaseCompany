@@ -5,11 +5,12 @@ using System.Data;
 using System.Text;
 using CompanyAPI.Interface;
 using CompanyAPI.Model;
+using CompanyAPI.Model.Dto;
 using Dapper;
 
 namespace CompanyAPI.Repository
 {
-    public class CompanyRepository : IBaseInterface<Company>
+    public class CompanyRepository : IBaseInterface<Company, CompanyDto>
     {
         string dbConStr = "";
         string selectCmd = "select Id, Name, FoundedDate from viCompany";
@@ -36,20 +37,31 @@ namespace CompanyAPI.Repository
 
             using (SqlConnection sqlcon = new SqlConnection(dbConStr))
             {
-                return sqlcon.QueryFirst<Company>($"{selectCmd} WHERE Id = @id", parameters);
+                return sqlcon.QueryFirstOrDefault<Company>($"{selectCmd} WHERE Id = @id", parameters);
             }
         }
-        public Company Create(Company company)
+        public bool Create(CompanyDto companyDto)
         {
+            var company = new Company()
+            {
+                Name = companyDto.Name,
+                FoundedDate = companyDto.FoundedDate
+            };
             return CreateOrUpdate(company);
         }
 
-        public Company Update(Company company)
+        public bool Update(int id, CompanyDto companyDto)
         {
+            var company = new Company()
+            {
+                Id = id,
+                Name = companyDto.Name,
+                FoundedDate = companyDto.FoundedDate
+            };
             return CreateOrUpdate(company);
         }
 
-        private Company CreateOrUpdate(Company company)
+        private bool CreateOrUpdate(Company company)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@CompanyId", company.Id);
@@ -58,12 +70,7 @@ namespace CompanyAPI.Repository
 
             using (SqlConnection sqlcon = new SqlConnection(dbConStr))
             {
-                int id = sqlcon.ExecuteScalar<int>(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure);
-
-                parameters = new DynamicParameters();
-                parameters.Add("@id", id);
-
-                return sqlcon.QueryFirst<Company>($"{selectCmd} WHERE Id = @id", parameters);
+                return 1 == (sqlcon.Execute(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
             }
         }
 
