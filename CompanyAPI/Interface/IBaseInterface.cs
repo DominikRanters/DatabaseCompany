@@ -5,12 +5,12 @@ using CompanyAPI.Model;
 
 namespace CompanyAPI.Interface
 {
-    public interface IBaseInterface<T>
+    public interface IBaseInterface<TModel, TModelDto>
     {
-        List<T> Read();
-        T Read(int id);
-        T Create(T data);
-        T Update(T data);
+        List<TModel> Read();
+        TModel Read(int id);
+        bool Create(TModelDto data);
+        bool Update(int id, TModelDto data);
         bool Delete(int id);
 
     }
