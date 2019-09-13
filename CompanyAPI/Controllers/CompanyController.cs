@@ -25,14 +25,14 @@ namespace CompanyAPI.Controller
             _companyRepository = new CompanyRepository("Data Source=tappqa;Initial Catalog=Training-DS-Company;Integrated Security=True");
         }
 
-        // GET api/values
+        // GET company
         [HttpGet]
         public IActionResult GetCompanies()
         {
             return Ok(_companyRepository.Read());
         }
 
-        // GET api/values/5
+        // GET company/1
         [HttpGet("{id}")]
         public IActionResult GetCompany(int id)
         {
