@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CompanyApp.Model
+namespace CompanyAPI.Model
 {
     public class Company
     {

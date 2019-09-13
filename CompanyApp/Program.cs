@@ -1,4 +1,5 @@
 ﻿using System;
+using CompanyApp.Model;
 
 namespace CompanyApp
 {
@@ -8,196 +9,190 @@ namespace CompanyApp
         static void Main(string[] args)
         {
             // Variables
-            string input, action;
-            int id = 0;
+            string input;
+            int id = 0, action;
 
-            Controller.LocationController locationController = new Controller.LocationController(CONSTRING_TAPPQA);
-            //Controller.EmployeeController employeeController = new Controller.EmployeeController(CONSTRING_TAPPQA);
+            Controller.CompanyController companyController = new Controller.CompanyController(CONSTRING_TAPPQA);
+            Controller.EmployeeController employeeController = new Controller.EmployeeController(CONSTRING_TAPPQA);
 
-            Console.WriteLine("An welcher Tabelle wollen Sie was ändern? (Company, Employee, Address)");
-            action = Console.ReadLine();
+            Console.WriteLine("An welcher Tabelle wollen Sie was ändern?");
+            Console.WriteLine("1) Comnpany");
+            Console.WriteLine("2) Employee");
+            Console.WriteLine("3) Address");
+            action = Convert.ToInt32(Console.ReadLine());
 
-            switch (action.ToLower())
+            switch (action)
             {
-                case "company":
+                case 1:
                     // Company
                     #region Company
-                    Model.Company companyModel = new Model.Company();
-                    
-                    Console.WriteLine("What would you do? (Read, Create, Update, Delete)");
-                    action = Console.ReadLine();
+                    Company company = new Company();
 
-                    switch (action.ToLower())
+                    Console.WriteLine("What would you do?");
+                    Console.WriteLine("1) Read all");
+                    Console.WriteLine("2) Read id");
+                    Console.WriteLine("3) Create");
+                    Console.WriteLine("4) Update");
+                    Console.WriteLine("5) Delete");
+                    action = Convert.ToInt32(Console.ReadLine());
+
+                    switch (action)
                     {
-                        case "read":
-                            Console.WriteLine("All column or search a id? ('All' or the id you search for)");
-                            action = Console.ReadLine();
-                            Console.WriteLine();
-
-                            switch(action.ToLower())
+                        case 1:
+                            var companies = companyController.Read();
+                            foreach (var companyItem in companies)
                             {
-                                case "all":
-                                    var companies = locationController.Read();
-                                    foreach (var company in companies)
-                                    {
-                                        Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
-                                    }
-                                    break;
-
-                                default:
-                                    Model.Company companyData = locationController.Read(Convert.ToInt32(action));
-                                    Console.WriteLine($"id={companyData.Id}, name={companyData.Name}, foudedDate={companyData.FoundedDate}");
-                                    break;
-
+                                Console.WriteLine($"id={companyItem.Id}, name={companyItem.Name}, foudedDate={companyItem.FoundedDate}");
                             }
                             break;
 
-                        case "create":
+                        case 2:
+                            Console.WriteLine("Geben Sie bitte die id ein");
+                            id = Convert.ToInt32(Console.ReadLine());
+                            company = companyController.Read(id);
+                            Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
+                            break;
+
+                        case 3:
                             Console.WriteLine("What is the company name?");
-                            companyModel.Name = Console.ReadLine();
+                            company.Name = Console.ReadLine();
 
                             Console.WriteLine("What is the founding date(yyyy-mm-dd)? (can be empty)");
                             input = Console.ReadLine();
-                            companyModel.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
+                            company.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                            locationController.Create(companyModel);
-
+                            company = companyController.Create(company);
+                            Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
                             break;
 
-                        case "update":
+                        case 4:
                             Console.WriteLine("Enter the ID of the company you want to change");
-                            companyModel.Id = Convert.ToInt32(Console.ReadLine());
+                            company.Id = Convert.ToInt32(Console.ReadLine());
 
                             Console.WriteLine("What is the new company name? (no change then press enter)");
-                            companyModel.Name = Console.ReadLine();
-                            companyModel.Name = companyModel.Name == "" ? null : companyModel.Name;
+                            company.Name = Console.ReadLine();
+                            company.Name = company.Name == "" ? null : company.Name;
 
-                            Console.WriteLine("What is the new founding date? (no change then press enter)");
+                            Console.WriteLine("What is the new founding date(yyyy-mm-dd)? (no change then press enter)");
                             input = Console.ReadLine();
-                            companyModel.FoundedDate =  input == "" ? null : (DateTime?)Convert.ToDateTime(input);
+                            company.FoundedDate = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                            locationController.Update(companyModel);
 
+                            company = companyController.Update(company);
+                            Console.WriteLine($"id={company.Id}, name={company.Name}, foudedDate={company.FoundedDate}");
                             break;
 
-                        case "delete":
-                            Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte\n");
+                        case 5:
+                            Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte");
                             id = Convert.ToInt32(Console.ReadLine());
-                            locationController.Delete(id);
+                            companyController.Delete(id);
                             break;
                     }
                     #endregion
                     break;
 
-                case "employee":
+                case 2:
                     // Employee
                     #region Employee
-                    //string firstName, lastName;
-                    //int? departmentId = null, addressId = null;
-                    //DateTime? birthday = null;
+                    Employee employee = new Employee();
 
-                    //Console.WriteLine("What would you do? (Read, Create, Update, Delete)");
-                    //action = Console.ReadLine();
+                    Console.WriteLine("An welcher Tabelle wollen Sie was ändern?");
+                    Console.WriteLine("1) Read all");
+                    Console.WriteLine("2) Read id");
+                    Console.WriteLine("3) Create");
+                    Console.WriteLine("4) Update");
+                    Console.WriteLine("5) Delete");
+                    action = Convert.ToInt32(Console.ReadLine());
 
-                    //switch (action.ToLower())
-                    //{
-                    //    case "read":
+                    switch (action)
+                    {
+                        case 1:
+                            Console.WriteLine();
+                            var employees = employeeController.Read();
+                            foreach (var employeeItem in employees)
+                            {
+                                Console.WriteLine($"Id={employeeItem.Id}, FirstName={employeeItem.FirstName}, LastName={employeeItem.LastName}" +
+                                                    $", Birthday={employeeItem.Birthday}, DepartmentId={employeeItem.DepartmentId}, AdressId={employeeItem.AddressId}");
+                            }
+                            break;
 
-                    //        Console.WriteLine("All column or search a id? ('All' or the id you search for)");
-                    //        action = Console.ReadLine();
+                        case 2:
+                            Console.WriteLine("Geben Sie bitte die id ein");
+                            id = Convert.ToInt32(Console.ReadLine());
 
-                    //        switch (action.ToLower())
-                    //        {
-                    //            case "all":
-                    //                var employees = employeeController.Read();
-                    //                foreach (var employee in employees)
-                    //                {
-                    //                    Console.WriteLine(  $"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
-                    //                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, Zip={employee.Zip}" +
-                    //                                        $", City={employee.City}, Street={employee.Street}, Country={employee.Country}");
-                    //                }
-                    //                break;
+                            employee = employeeController.Read(id);
+                            Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
+                            break;
 
-                    //            default:
-                    //                Model.Employee employeeData = employeeController.Read(Convert.ToInt32(action));
-                    //                Console.WriteLine(  $"\nId={employeeData.Id}, FirstName={employeeData.FirstName}, LastName={employeeData.LastName}" +
-                    //                                    $", Birthday={employeeData.Birthday}, DepartmentId={employeeData.DepartmentId}, Zip={employeeData.Zip}" +
-                    //                                    $", City={employeeData.City}, Street={employeeData.Street}, Country={employeeData.Country}");
-                    //                break;
+                        case 3:
+                            Console.WriteLine("\nfirst name");
+                            employee.FirstName = Console.ReadLine();
 
-                    //        }
-                    //        break;
+                            Console.WriteLine("\nlast name");
+                            employee.LastName = Console.ReadLine();
 
-                    //    case "create":
-                    //        Console.WriteLine("What is the first name?");
-                    //        firstName = Console.ReadLine();
+                            Console.WriteLine("\nbirthday (yyyy-mm-dd) (can be empty)");
+                            input = Console.ReadLine();
+                            employee.Birthday = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                    //        Console.WriteLine("What is the last name?");
-                    //        lastName = Console.ReadLine();
+                            Console.WriteLine("\ndepartment id");
+                            employee.DepartmentId = Convert.ToInt32(Console.ReadLine());
 
-                    //        Console.WriteLine("What is the birthday (yyyy-mm-dd)? (can be empty)");
-                    //        input = Console.ReadLine();
-                    //        if (input != "")
-                    //            birthday = Convert.ToDateTime(input);
+                            Console.WriteLine("\naddress id (can be empty)");
+                            employee.AddressId = Convert.ToInt32(Console.ReadLine());
 
-                    //        Console.WriteLine("What is the departmentId?");
-                    //        departmentId = Convert.ToInt32(Console.ReadLine());
+                            employee = employeeController.Create(employee);
+                            Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
+                            break;
 
-                    //        Console.WriteLine("What is the adressId? (can be empty)");
-                    //        input = Console.ReadLine();
-                    //        if (input != "")
-                    //            addressId = Convert.ToInt32(Console.ReadLine());
+                        case 4:
+                            Console.WriteLine("Enter the ID of the employee you want to change");
+                            employee.Id = Convert.ToInt32(Console.ReadLine());
 
-                    //        employeeController.CreateOrUpdate(firstName, lastName, departmentId, birthday, addressId);
+                            Console.WriteLine("\nfirst name (no change then press enter)");
+                            employee.FirstName = Console.ReadLine();
 
-                    //        break;
+                            Console.WriteLine("\nlast name (no change then press enter)");
+                            employee.LastName = Console.ReadLine();
 
-                    //    case "update":
-                    //        Console.WriteLine("Enter the ID of the company you want to change");
-                    //        id = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("\nbirthday (yyyy-mm-dd)  (no change then press enter)");
+                            input = Console.ReadLine();
+                            employee.Birthday = input == "" ? null : (DateTime?)Convert.ToDateTime(input);
 
-                    //        Console.WriteLine("What is the first name? (no change then press enter)");
-                    //        firstName = Console.ReadLine();
+                            Console.WriteLine("\ndepartment id (no change then press enter)");
+                            employee.DepartmentId = Convert.ToInt32(Console.ReadLine());
 
-                    //        Console.WriteLine("What is the last name? (no change then press enter)");
-                    //        lastName = Console.ReadLine();
+                            Console.WriteLine("\naddress id (no change then press enter)");
+                            employee.AddressId = Convert.ToInt32(Console.ReadLine());
 
-                    //        Console.WriteLine("What is the birthday (yyyy-mm-dd)? (no change then press enter)");
-                    //        input = Console.ReadLine();
-                    //        if (input != "")
-                    //            birthday = Convert.ToDateTime(input);
+                            employee = employeeController.Create(employee);
+                            Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
 
-                    //        Console.WriteLine("What is the departmentId? (no change then press enter)");
-                    //        input = Console.ReadLine();
-                    //        if (input != "")
-                    //            departmentId = Convert.ToInt32(Console.ReadLine());
+                            employee = employeeController.Update(employee);
+                            Console.WriteLine($"\nId={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}" +
+                                                        $", Birthday={employee.Birthday}, DepartmentId={employee.DepartmentId}, AdressId={employee.AddressId}");
+                            break;
 
-                    //        Console.WriteLine("What is the adressId? (can be empty) (no change then press enter)");
-                    //        addressId = Convert.ToInt32(Console.ReadLine());
-
-                    //        employeeController.CreateOrUpdate(firstName, lastName, departmentId, birthday, addressId, id);
-                    //        break;
-
-                    //    case "delete":
-                    //        Console.WriteLine("Geben Sie bitte die id  von dem Datensatz an, den sie löschen möchte");
-                    //        id = Convert.ToInt32(Console.ReadLine());
-                    //        employeeController.Delete(id);
-                    //        break;
-                    //}
+                        case 5:
+                            Console.WriteLine("Geben Sie bitte die id von dem Datensatz an, den sie löschen möchte");
+                            id = Convert.ToInt32(Console.ReadLine());
+                            employeeController.Delete(id);
+                            break;
+                    }
                     #endregion
                     break;
 
-                case "address":
+                case 3:
                     break;
             }
 
-            
-
-
 
             Console.WriteLine("\nPress Enter to quit");
-            Console.ReadKey(); 
-            
+            Console.ReadKey();
+
         }
     }
 }
