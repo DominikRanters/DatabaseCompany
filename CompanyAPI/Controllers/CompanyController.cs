@@ -19,11 +19,11 @@ namespace CompanyAPI.Controller
     [Route("company")]
     public class CompanyController : ControllerBase
     {
-        readonly IBaseInterface<Company, CompanyDto> _companyRepository;
+        private readonly IBaseInterface<Company, CompanyDto> _companyRepository;
 
-        public CompanyController()
+        public CompanyController(IBaseInterface<Company, CompanyDto> companyRepository)
         {
-            _companyRepository = new CompanyRepository("Data Source=tappqa;Initial Catalog=Training-DS-Company;Integrated Security=True");
+            _companyRepository = companyRepository;
         }
 
         // GET company
