@@ -31,7 +31,13 @@ namespace CompanyAPI.Repository
 
         public Departmnet Read(int id)
         {
-            throw new NotImplementedException();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@id", id);
+
+            using (var sqlcon = _dbContext.GetConnection())
+            {
+                return sqlcon.QueryFirstOrDefault<Departmnet>($"{selectCmd} WHERE @id = Id", parameters);
+            }
         }
 
         public bool Create(DepartmentDto data)
