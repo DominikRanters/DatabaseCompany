@@ -33,5 +33,16 @@ namespace CompanyAPI.Controllers
 
             return Ok(retval);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetDeparment(int id)
+        {
+            var retval = _departmentRepository.Read(id);
+
+            if (retval == null)
+                NoContent();
+
+            return Ok(retval);
+        }
     }
 }
