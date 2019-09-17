@@ -29,7 +29,7 @@ namespace CompanyAPI.Controllers
             var retval = _departmentRepository.Read();
 
             if (retval.Count == 0)
-                NoContent();
+                return NoContent();
 
             return Ok(retval);
         }
@@ -40,9 +40,19 @@ namespace CompanyAPI.Controllers
             var retval = _departmentRepository.Read(id);
 
             if (retval == null)
-                NoContent();
+                return NoContent();
 
             return Ok(retval);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteDepartment(int id)
+        {
+            if (_departmentRepository.Delete(id))
+                return NoContent();
+
+            return BadRequest();
+        }
+
     }
 }

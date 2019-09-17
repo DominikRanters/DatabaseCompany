@@ -14,7 +14,8 @@ namespace CompanyAPI.Repository
     {
         private readonly IDbContext _dbContext;
 
-        string selectCmd = "SELECT Id, Name, Description, CompanyId FROM viDEpartment";
+        string selectCmd = "SELECT Id, Name, Description, CompanyId FROM viDepartment";
+        string deleteCmd = "UPDATE Department SET DeleteTime = GetDate() WHERE @id = Id";
 
         public DepartmentRepository(IDbContext dbContext)
         {
@@ -52,7 +53,13 @@ namespace CompanyAPI.Repository
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@id", id);
+
+            using (var sqlcon = _dbContext.GetConnection())
+            {
+                return 1 == (sqlcon.Execute(deleteCmd,parameters));
+            }
         }
 
     }
