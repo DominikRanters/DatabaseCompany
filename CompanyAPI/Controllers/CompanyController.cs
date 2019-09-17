@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper;
-using System.Linq;
 using CompanyAPI.Interface;
 using CompanyAPI.Model;
 using CompanyAPI.Model.Dto;
@@ -19,11 +18,11 @@ namespace CompanyAPI.Controller
     [Route("company")]
     public class CompanyController : ControllerBase
     {
-        readonly IBaseInterface<Company, CompanyDto> _companyRepository;
+        private readonly IBaseInterface<Company, CompanyDto> _companyRepository;
 
-        public CompanyController()
+        public CompanyController(IBaseInterface<Company, CompanyDto> companyRepository)
         {
-            _companyRepository = new CompanyRepository("Data Source=tappqa;Initial Catalog=Training-DS-Company;Integrated Security=True");
+            _companyRepository = companyRepository;
         }
 
         // GET company
@@ -54,28 +53,28 @@ namespace CompanyAPI.Controller
         [HttpPost]
         public IActionResult PostCompany([FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null)
+            if (companyDto.Name == null || companyDto.Name == "")
                 return BadRequest();
 
             var retval = _companyRepository.Create(companyDto);
             if (retval)
-                return BadRequest();
+                return StatusCode(StatusCodes.Status201Created);
 
-            return StatusCode(StatusCodes.Status201Created); 
+            return StatusCode(StatusCodes.Status409Conflict);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public IActionResult PutCompany(int id, [FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null)
+            if (companyDto.Name == null || companyDto.Name == "")
                 return BadRequest();
 
             var retval = _companyRepository.Update(id, companyDto);
             if (retval)
                 return NoContent();
 
-            return BadRequest();
+            return StatusCode(StatusCodes.Status409Conflict);
         }
 
         // DELETE api/values/5

@@ -10,6 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using CompanyAPI.Interface;
+using CompanyAPI.Model;
+using CompanyAPI.Model.Dto;
+using CompanyAPI.Repository;
+using CompanyAPI.Helper;
 
 namespace CompanyAPI
 {
@@ -26,6 +31,12 @@ namespace CompanyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.Configure<DbSettings>(Configuration.GetSection("DbSettings"));
+
+            services.AddScoped<IBaseInterface<Company, CompanyDto>, CompanyRepository>();
+            services.AddScoped<IBaseInterface<Departmnet, DepartmentDto>, DepartmentRepository>();
+
+            services.AddSingleton<IDbContext, DbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
