@@ -22,11 +22,11 @@ AS
 	end
 		else
 	begin
-		UPDATE	[dbo].Department SET
-				[Name] = case when @Name is null then [Name] else @Name end,
-				[Description] = case when @Description is null then [Description] else @Description end,
-				[CompanyId] = case when @CompanyId is null then [CompanyId] else @CompanyId end
-		WHERE	Id = @dbId;
+		UPDATE		[dbo].Department SET
+					[Name] = case when @Name is null then [Name] else @Name end,
+					[Description] = case when @Description is null then [Description] else @Description end,
+					[CompanyId] = case when @CompanyId is null then [CompanyId] else @CompanyId end
+		WHERE		Id = @dbId;
 	end
 
 SELECT @dbId
