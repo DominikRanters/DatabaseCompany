@@ -48,10 +48,25 @@ namespace CompanyAPI.Controllers
         [HttpPost]
         public IActionResult CreateDepartment([FromBody] DepartmentDto departmentDto)
         {
+            if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
+                return BadRequest();
+
             if (_departmentRepository.Create(departmentDto))
                 return StatusCode(StatusCodes.Status201Created);
 
-            return BadRequest();
+            return StatusCode(StatusCodes.Status409Conflict);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateDepartment(int id,[FromBody] DepartmentDto departmentDto)
+        {
+            if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
+                return BadRequest();
+
+            if (_departmentRepository.Update(id, departmentDto))
+                return NoContent();
+
+            return StatusCode(StatusCodes.Status409Conflict);
         }
 
         [HttpDelete("{id}")]

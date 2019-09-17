@@ -56,7 +56,15 @@ namespace CompanyAPI.Repository
 
         public bool Update(int id, DepartmentDto departmentDto)
         {
-            throw new NotImplementedException();
+            Departmnet departmnet = new Departmnet()
+            {
+                Id = id,
+                Name = departmentDto.Name,
+                Description = departmentDto.Description,
+                CompanyId = departmentDto.CompanyId
+            };
+
+            return CreateOrUpdate(departmnet);
         }
 
         private bool CreateOrUpdate(Departmnet departmnet)
@@ -69,7 +77,16 @@ namespace CompanyAPI.Repository
 
             using (var sqlcon = _dbContext.GetConnection())
             {
-                return 1 == (sqlcon.Execute(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
+                try
+                {
+                    return 1 == (sqlcon.Execute(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    return false;
+                }
+                
             }
         }
 
