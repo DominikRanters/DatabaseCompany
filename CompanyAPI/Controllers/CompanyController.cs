@@ -58,9 +58,9 @@ namespace CompanyAPI.Controller
 
             var retval = _companyRepository.Create(companyDto);
             if (retval)
-                return BadRequest();
+                return StatusCode(StatusCodes.Status201Created);
 
-            return StatusCode(StatusCodes.Status201Created); 
+            return BadRequest();
         }
 
         // PUT api/values/5

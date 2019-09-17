@@ -16,6 +16,7 @@ namespace CompanyAPI.Repository
 
         string selectCmd = "SELECT Id, Name, Description, CompanyId FROM viDepartment";
         string deleteCmd = "UPDATE Department SET DeleteTime = GetDate() WHERE @id = Id";
+        string spCreateOrUpdate = "spCreateOrUpdateDepartment";
 
         public DepartmentRepository(IDbContext dbContext)
         {
@@ -41,14 +42,35 @@ namespace CompanyAPI.Repository
             }
         }
 
-        public bool Create(DepartmentDto data)
+        public bool Create(DepartmentDto departmentDto)
+        {
+            Departmnet departmnet = new Departmnet()
+            {
+                Name = departmentDto.Name,
+                Description = departmentDto.Description,
+                CompanyId = departmentDto.CompanyId
+            };
+
+            return CreateOrUpdate(departmnet);
+        }
+
+        public bool Update(int id, DepartmentDto departmentDto)
         {
             throw new NotImplementedException();
         }
 
-        public bool Update(int id, DepartmentDto data)
+        private bool CreateOrUpdate(Departmnet departmnet)
         {
-            throw new NotImplementedException();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@DepartmentId", departmnet.Id);
+            parameters.Add("@Name", departmnet.Name);
+            parameters.Add("@Description", departmnet.Description);
+            parameters.Add("@CompanyId", departmnet.CompanyId);
+
+            using (var sqlcon = _dbContext.GetConnection())
+            {
+                return 1 == (sqlcon.Execute(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
+            }
         }
 
         public bool Delete(int id)

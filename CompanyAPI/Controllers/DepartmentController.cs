@@ -45,6 +45,15 @@ namespace CompanyAPI.Controllers
             return Ok(retval);
         }
 
+        [HttpPost]
+        public IActionResult CreateDepartment([FromBody] DepartmentDto departmentDto)
+        {
+            if (_departmentRepository.Create(departmentDto))
+                return StatusCode(StatusCodes.Status201Created);
+
+            return BadRequest();
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteDepartment(int id)
         {
