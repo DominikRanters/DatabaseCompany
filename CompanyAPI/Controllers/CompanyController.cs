@@ -53,28 +53,28 @@ namespace CompanyAPI.Controller
         [HttpPost]
         public IActionResult PostCompany([FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null)
+            if (companyDto.Name == null || companyDto.Name == "")
                 return BadRequest();
 
             var retval = _companyRepository.Create(companyDto);
             if (retval)
                 return StatusCode(StatusCodes.Status201Created);
 
-            return BadRequest();
+            return StatusCode(StatusCodes.Status409Conflict);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public IActionResult PutCompany(int id, [FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null)
+            if (companyDto.Name == null || companyDto.Name == "")
                 return BadRequest();
 
             var retval = _companyRepository.Update(id, companyDto);
             if (retval)
                 return NoContent();
 
-            return BadRequest();
+            return StatusCode(StatusCodes.Status409Conflict);
         }
 
         // DELETE api/values/5
