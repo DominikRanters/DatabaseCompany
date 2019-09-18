@@ -8,6 +8,6 @@ namespace CompanyAPI.Interface
 {
     public interface IDbContext
     {
-        IDbConnection GetConnection();
+        Task<IDbConnection> GetConnection();
     }
 }
