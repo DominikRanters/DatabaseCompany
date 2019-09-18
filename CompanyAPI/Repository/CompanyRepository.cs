@@ -27,9 +27,16 @@ namespace CompanyAPI.Repository
 
         public async Task<List<Company>> Read()
         {
-            using (var sqlcon =  await _dbContext.GetConnection())
+            try
             {
-                return sqlcon.Query<Company>(selectCmd).AsList();
+                using (var sqlcon = await _dbContext.GetConnection())
+                {
+                    return (await sqlcon.QueryAsync<Company>(selectCmd)).AsList();
+                }
+            }
+            catch (SqlException)
+            {
+                throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
         }
 
@@ -38,9 +45,16 @@ namespace CompanyAPI.Repository
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@id", id);
 
-            using (var sqlcon = await _dbContext.GetConnection())
+            try
             {
-                return sqlcon.QueryFirstOrDefault<Company>($"{selectCmd} WHERE Id = @id", parameters);
+                using (var sqlcon = await _dbContext.GetConnection())
+                {
+                    return await sqlcon.QueryFirstOrDefaultAsync<Company>($"{selectCmd} WHERE Id = @id", parameters);
+                }
+            }
+            catch (SqlException)
+            {
+                throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
         }
         public async Task<bool> Create(CompanyDto companyDto)
@@ -66,14 +80,24 @@ namespace CompanyAPI.Repository
 
         private async Task<bool> CreateOrUpdate(Company company)
         {
+            if (company.Id < 1)
+                throw new Helper.RepoException(Helper.RepoResultType.WORNGPARAMETER);
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@CompanyId", company.Id);
             parameters.Add("@Name", company.Name);
             parameters.Add("@FoundedDate", company.FoundedDate);
 
-            using (var sqlcon = await _dbContext.GetConnection())
+            try
             {
-                return 1 == (sqlcon.Execute(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
+                using (var sqlcon = await _dbContext.GetConnection())
+                {
+                    return 1 == await (sqlcon.ExecuteAsync(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
+                }
+            }
+            catch (SqlException)
+            {
+                throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
         }
 
@@ -89,12 +113,10 @@ namespace CompanyAPI.Repository
             {
                 using (IDbConnection sqlcon = await _dbContext.GetConnection())
                 {
-                    return 1 == (sqlcon.Execute(deleteCmd, parameters));
-                    //if (!retval)
-                    //    throw new Helper.RepoException(Helper.RepoResultType.NOTFOUND);
+                    return 1 == await (sqlcon.ExecuteAsync(deleteCmd, parameters));
                 }
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
                 throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
