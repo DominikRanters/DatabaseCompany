@@ -24,9 +24,9 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDepartments()
+        public async Task<IActionResult> GetDepartments()
         {
-            var retval = _departmentRepository.Read();
+            var retval = await _departmentRepository.Read();
 
             if (retval.Count == 0)
                 return NoContent();
@@ -35,9 +35,9 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetDeparment(int id)
+        public async Task<IActionResult> GetDeparment(int id)
         {
-            var retval = _departmentRepository.Read(id);
+            var retval = await _departmentRepository.Read(id);
 
             if (retval == null)
                 return NoContent();
@@ -46,33 +46,33 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateDepartment([FromBody] DepartmentDto departmentDto)
+        public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto departmentDto)
         {
             if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
                 return BadRequest();
 
-            if (_departmentRepository.Create(departmentDto))
+            if (await _departmentRepository.Create(departmentDto))
                 return StatusCode(StatusCodes.Status201Created);
 
             return StatusCode(StatusCodes.Status409Conflict);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateDepartment(int id,[FromBody] DepartmentDto departmentDto)
+        public async Task<IActionResult> UpdateDepartment(int id,[FromBody] DepartmentDto departmentDto)
         {
             if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
                 return BadRequest();
 
-            if (_departmentRepository.Update(id, departmentDto))
+            if (await _departmentRepository.Update(id, departmentDto))
                 return NoContent();
 
             return StatusCode(StatusCodes.Status409Conflict);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteDepartment(int id)
+        public async Task<IActionResult> DeleteDepartment(int id)
         {
-            if (_departmentRepository.Delete(id))
+            if (await _departmentRepository.Delete(id))
                 return NoContent();
 
             return BadRequest();

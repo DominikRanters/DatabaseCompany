@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
@@ -7,6 +8,7 @@ using CompanyAPI.Interface;
 using CompanyAPI.Model;
 using CompanyAPI.Model.Dto;
 using Dapper;
+using System.Threading.Tasks;
 
 namespace CompanyAPI.Repository
 {
@@ -23,35 +25,35 @@ namespace CompanyAPI.Repository
             _dbContext = dbContext;
         }
 
-        public List<Company> Read()
+        public async Task<List<Company>> Read()
         {
-            using (var sqlcon = _dbContext.GetConnection())
+            using (var sqlcon =  await _dbContext.GetConnection())
             {
                 return sqlcon.Query<Company>(selectCmd).AsList();
             }
         }
 
-        public Company Read(int id)
+        public async Task<Company> Read(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@id", id);
 
-            using (var sqlcon = _dbContext.GetConnection())
+            using (var sqlcon = await _dbContext.GetConnection())
             {
                 return sqlcon.QueryFirstOrDefault<Company>($"{selectCmd} WHERE Id = @id", parameters);
             }
         }
-        public bool Create(CompanyDto companyDto)
+        public async Task<bool> Create(CompanyDto companyDto)
         {
             var company = new Company()
             {
                 Name = companyDto.Name,
                 FoundedDate = companyDto.FoundedDate
             };
-            return CreateOrUpdate(company);
+            return await CreateOrUpdate(company);
         }
 
-        public bool Update(int id, CompanyDto companyDto)
+        public async Task<bool> Update(int id, CompanyDto companyDto)
         {
             var company = new Company()
             {
@@ -59,30 +61,42 @@ namespace CompanyAPI.Repository
                 Name = companyDto.Name,
                 FoundedDate = companyDto.FoundedDate
             };
-            return CreateOrUpdate(company);
+            return await CreateOrUpdate(company);
         }
 
-        private bool CreateOrUpdate(Company company)
+        private async Task<bool> CreateOrUpdate(Company company)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@CompanyId", company.Id);
             parameters.Add("@Name", company.Name);
             parameters.Add("@FoundedDate", company.FoundedDate);
 
-            using (var sqlcon = _dbContext.GetConnection())
+            using (var sqlcon = await _dbContext.GetConnection())
             {
                 return 1 == (sqlcon.Execute(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
             }
         }
 
-        public bool Delete(int id = 0)
+        public async Task<bool> Delete(int id = 0)
         {
-            using (IDbConnection sqlcon = _dbContext.GetConnection())
-            {
-                DynamicParameters parameters = new DynamicParameters();
-                parameters.Add("@id", id);
+            if (id < 1)
+                throw new Helper.RepoException(Helper.RepoResultType.WORNGPARAMETER);
 
-                return 1 == (sqlcon.Execute(deleteCmd, parameters));
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@id", id);
+
+            try
+            {
+                using (IDbConnection sqlcon = await _dbContext.GetConnection())
+                {
+                    return 1 == (sqlcon.Execute(deleteCmd, parameters));
+                    //if (!retval)
+                    //    throw new Helper.RepoException(Helper.RepoResultType.NOTFOUND);
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
         }
 

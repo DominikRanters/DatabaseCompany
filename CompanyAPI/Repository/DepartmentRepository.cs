@@ -23,26 +23,26 @@ namespace CompanyAPI.Repository
             _dbContext = dbContext;
         }
 
-        public List<Departmnet> Read()
+        public async Task<List<Departmnet>> Read()
         {
-            using (var sqlcon = _dbContext.GetConnection())
+            using (var sqlcon = await _dbContext.GetConnection())
             {
                 return sqlcon.Query<Departmnet>(selectCmd).AsList();
             }
         }
 
-        public Departmnet Read(int id)
+        public async Task<Departmnet> Read(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@id", id);
 
-            using (var sqlcon = _dbContext.GetConnection())
+            using (var sqlcon = await _dbContext.GetConnection())
             {
                 return sqlcon.QueryFirstOrDefault<Departmnet>($"{selectCmd} WHERE @id = Id", parameters);
             }
         }
 
-        public bool Create(DepartmentDto departmentDto)
+        public async Task<bool> Create(DepartmentDto departmentDto)
         {
             Departmnet departmnet = new Departmnet()
             {
@@ -51,10 +51,10 @@ namespace CompanyAPI.Repository
                 CompanyId = departmentDto.CompanyId
             };
 
-            return CreateOrUpdate(departmnet);
+            return await CreateOrUpdate(departmnet);
         }
 
-        public bool Update(int id, DepartmentDto departmentDto)
+        public async Task<bool> Update(int id, DepartmentDto departmentDto)
         {
             Departmnet departmnet = new Departmnet()
             {
@@ -64,10 +64,10 @@ namespace CompanyAPI.Repository
                 CompanyId = departmentDto.CompanyId
             };
 
-            return CreateOrUpdate(departmnet);
+            return await CreateOrUpdate(departmnet);
         }
 
-        private bool CreateOrUpdate(Departmnet departmnet)
+        private async Task<bool> CreateOrUpdate(Departmnet departmnet)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@DepartmentId", departmnet.Id);
@@ -75,7 +75,7 @@ namespace CompanyAPI.Repository
             parameters.Add("@Description", departmnet.Description);
             parameters.Add("@CompanyId", departmnet.CompanyId);
 
-            using (var sqlcon = _dbContext.GetConnection())
+            using (var sqlcon = await _dbContext.GetConnection())
             {
                 try
                 {
@@ -90,12 +90,12 @@ namespace CompanyAPI.Repository
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@id", id);
 
-            using (var sqlcon = _dbContext.GetConnection())
+            using (var sqlcon = await _dbContext.GetConnection())
             {
                 return 1 == (sqlcon.Execute(deleteCmd,parameters));
             }
