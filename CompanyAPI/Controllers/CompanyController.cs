@@ -32,12 +32,31 @@ namespace CompanyAPI.Controller
         [HttpGet]
         public async Task<IActionResult> GetCompanies()
         {
-            var retval = await _companyRepository.Read();
+            try
+            {
+                var retval = await _companyRepository.Read();
 
-            if (retval.Count == 0)
-                return NoContent();
+                if (retval.Count == 0)
+                    return NoContent();
 
-            return Ok(retval);
+                return Ok(retval);
+
+            }
+            catch (Helper.RepoException repoEx)
+            {
+                switch (repoEx.ExType)
+                {
+                    case Helper.RepoResultType.SQL_ERROR:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
+
+                    case Helper.RepoResultType.WORNGPARAMETER:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return BadRequest();
+                }
+            }
+
+            return BadRequest();
         }
 
         // GET company/1
@@ -51,7 +70,6 @@ namespace CompanyAPI.Controller
             {
                 if (retval == null)
                     return NoContent();
-
                 return Ok(retval);
             }
             catch (Helper.RepoException repoEx)
@@ -78,33 +96,83 @@ namespace CompanyAPI.Controller
             if (companyDto.Name == null || companyDto.Name == "")
                 return BadRequest();
 
-            var retval = await _companyRepository.Create(companyDto);
-            if (retval)
-                return StatusCode(StatusCodes.Status201Created);
+            try
+            {
+                var retval = await _companyRepository.Create(companyDto);
+                if (retval)
+                    return StatusCode(StatusCodes.Status201Created);
+            }
+            catch (Helper.RepoException repoEx)
+            {
+                switch (repoEx.ExType)
+                {
+                    case Helper.RepoResultType.SQL_ERROR:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
 
-            return StatusCode(StatusCodes.Status409Conflict);
+                    case Helper.RepoResultType.WORNGPARAMETER:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return BadRequest();
+                }
+            }
+
+            return BadRequest();
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompany(int id, [FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null || companyDto.Name == "")
-                return BadRequest();
+            try
+            {
+                if (companyDto.Name == null || companyDto.Name == "")
+                    return BadRequest();
 
-            var retval = await _companyRepository.Update(id, companyDto);
-            if (retval)
-                return NoContent();
+                var retval = await _companyRepository.Update(id, companyDto);
+                if (retval)
+                    return NoContent();
 
-            return StatusCode(StatusCodes.Status409Conflict);
+            }
+            catch (Helper.RepoException repoEx)
+            {
+                switch (repoEx.ExType)
+                {
+                    case Helper.RepoResultType.SQL_ERROR:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
+
+                    case Helper.RepoResultType.WORNGPARAMETER:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return BadRequest();
+                }
+            }
+
+            return BadRequest();
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
-            if (await _companyRepository.Delete(id))
-                return NoContent();
+            try
+            {
+                if (await _companyRepository.Delete(id))
+                    return NoContent();
+
+            }
+            catch (Helper.RepoException repoEx)
+            {
+                switch (repoEx.ExType)
+                {
+                    case Helper.RepoResultType.SQL_ERROR:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
+
+                    case Helper.RepoResultType.WORNGPARAMETER:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return BadRequest();
+                }
+            }
 
             return BadRequest();
         }
