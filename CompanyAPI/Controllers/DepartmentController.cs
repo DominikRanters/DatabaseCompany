@@ -31,24 +31,29 @@ namespace CompanyAPI.Controllers
             try
             {
                 var retval = await _departmentRepository.Read();
-
-                if (retval.Count == 0)
-                    return NoContent();
-
                 return Ok(retval);
             }
-            catch (Helper.RepoException repoEx)
+            catch (RepoException repoEx)
             {
                 switch (repoEx.ExType)
                 {
-                    case Helper.RepoResultType.SQL_ERROR:
+                    case RepoResultType.SQL_ERROR:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return StatusCode(StatusCodes.Status503ServiceUnavailable);
 
-                    case Helper.RepoResultType.WORNGPARAMETER:
+                    case RepoResultType.WORNGPARAMETER:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return BadRequest();
+
+                    case RepoResultType.NOTFOUND:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return NotFound();
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.ToString());
+                return Conflict();
             }
 
             return BadRequest();
@@ -66,18 +71,27 @@ namespace CompanyAPI.Controllers
 
                 return Ok(retval);
             }
-            catch (Helper.RepoException repoEx)
+            catch (RepoException repoEx)
             {
                 switch (repoEx.ExType)
                 {
-                    case Helper.RepoResultType.SQL_ERROR:
+                    case RepoResultType.SQL_ERROR:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return StatusCode(StatusCodes.Status503ServiceUnavailable);
 
-                    case Helper.RepoResultType.WORNGPARAMETER:
+                    case RepoResultType.WORNGPARAMETER:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return BadRequest();
+
+                    case RepoResultType.NOTFOUND:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return NotFound();
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.ToString());
+                return Conflict();
             }
 
             return BadRequest();
@@ -94,18 +108,27 @@ namespace CompanyAPI.Controllers
                 if (await _departmentRepository.Create(departmentDto))
                     return StatusCode(StatusCodes.Status201Created);
             }
-            catch (Helper.RepoException repoEx)
+            catch (RepoException repoEx)
             {
                 switch (repoEx.ExType)
                 {
-                    case Helper.RepoResultType.SQL_ERROR:
+                    case RepoResultType.SQL_ERROR:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return StatusCode(StatusCodes.Status503ServiceUnavailable);
 
-                    case Helper.RepoResultType.WORNGPARAMETER:
+                    case RepoResultType.WORNGPARAMETER:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return BadRequest();
+
+                    case RepoResultType.NOTFOUND:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return NotFound();
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.ToString());
+                return Conflict();
             }
 
             return BadRequest();
@@ -122,18 +145,27 @@ namespace CompanyAPI.Controllers
                 if (await _departmentRepository.Update(id, departmentDto))
                     return NoContent();
             }
-            catch (Helper.RepoException repoEx)
+            catch (RepoException repoEx)
             {
                 switch (repoEx.ExType)
                 {
-                    case Helper.RepoResultType.SQL_ERROR:
+                    case RepoResultType.SQL_ERROR:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return StatusCode(StatusCodes.Status503ServiceUnavailable);
 
-                    case Helper.RepoResultType.WORNGPARAMETER:
+                    case RepoResultType.WORNGPARAMETER:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return BadRequest();
+
+                    case RepoResultType.NOTFOUND:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return NotFound();
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.ToString());
+                return Conflict();
             }
 
             return BadRequest();
@@ -147,18 +179,27 @@ namespace CompanyAPI.Controllers
                 if (await _departmentRepository.Delete(id))
                     return NoContent();
             }
-            catch (Helper.RepoException repoEx)
+            catch (RepoException repoEx)
             {
                 switch (repoEx.ExType)
                 {
-                    case Helper.RepoResultType.SQL_ERROR:
+                    case RepoResultType.SQL_ERROR:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return StatusCode(StatusCodes.Status503ServiceUnavailable);
 
-                    case Helper.RepoResultType.WORNGPARAMETER:
+                    case RepoResultType.WORNGPARAMETER:
                         _logger.LogError(repoEx.InnerException, repoEx.Message);
                         return BadRequest();
+
+                    case RepoResultType.NOTFOUND:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        return NotFound();
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.ToString());
+                return Conflict();
             }
 
             return BadRequest();

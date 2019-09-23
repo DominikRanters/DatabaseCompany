@@ -27,21 +27,29 @@ namespace CompanyAPI.Repository
 
         public async Task<List<Company>> Read()
         {
+            List<Company> retval;
             try
             {
                 using (var sqlcon = await _dbContext.GetConnection())
                 {
-                    return (await sqlcon.QueryAsync<Company>(selectCmd)).AsList();
+                    retval = (await sqlcon.QueryAsync<Company>(selectCmd)).AsList();
+
+                    if(retval.Count == 0)
+                        throw new Helper.RepoException(Helper.RepoResultType.NOTFOUND);
                 }
             }
             catch (SqlException)
             {
                 throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
+
+            return retval;
         }
 
         public async Task<Company> Read(int id)
         {
+            Company retval;
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@id", id);
 
@@ -49,16 +57,24 @@ namespace CompanyAPI.Repository
             {
                 using (var sqlcon = await _dbContext.GetConnection())
                 {
-                    return await sqlcon.QueryFirstOrDefaultAsync<Company>($"{selectCmd} WHERE Id = @id", parameters);
+                    retval =  await sqlcon.QueryFirstOrDefaultAsync<Company>($"{selectCmd} WHERE Id = @id", parameters);
+
+                    if (retval == null)
+                        throw new Helper.RepoException(Helper.RepoResultType.NOTFOUND);
                 }
             }
             catch (SqlException)
             {
                 throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
+
+            return retval;
         }
         public async Task<bool> Create(CompanyDto companyDto)
         {
+            if (companyDto.Name == null || companyDto.Name == "")
+                throw new Helper.RepoException(Helper.RepoResultType.WORNGPARAMETER);
+
             var company = new Company()
             {
                 Name = companyDto.Name,
@@ -69,6 +85,9 @@ namespace CompanyAPI.Repository
 
         public async Task<bool> Update(int id, CompanyDto companyDto)
         {
+            if (companyDto.Name == null || companyDto.Name == "" || id < 1)
+                throw new Helper.RepoException(Helper.RepoResultType.WORNGPARAMETER);
+            
             var company = new Company()
             {
                 Id = id,
@@ -80,9 +99,6 @@ namespace CompanyAPI.Repository
 
         private async Task<bool> CreateOrUpdate(Company company)
         {
-            if (company.Id < 1)
-                throw new Helper.RepoException(Helper.RepoResultType.WORNGPARAMETER);
-
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@CompanyId", company.Id);
             parameters.Add("@Name", company.Name);

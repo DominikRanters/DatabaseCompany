@@ -6,6 +6,7 @@ using System.Data;
 using CompanyAPI.Interface;
 using CompanyAPI.Model;
 using CompanyAPI.Model.Dto;
+using CompanyAPI.Helper;
 using Dapper;
 using System.Data.SqlClient;
 
@@ -26,17 +27,23 @@ namespace CompanyAPI.Repository
 
         public async Task<List<Departmnet>> Read()
         {
+            List<Departmnet> retval;
+
             try
             {
                 using (var sqlcon = await _dbContext.GetConnection())
                 {
-                    return (await sqlcon.QueryAsync<Departmnet>(selectCmd)).AsList();
+                    retval = (await sqlcon.QueryAsync<Departmnet>(selectCmd)).AsList();
+                    if (retval.Count == 0)
+                        throw new RepoException(RepoResultType.NOTFOUND);
                 }
             }
             catch (SqlException)
             {
-                throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
+                throw new RepoException(RepoResultType.SQL_ERROR);
             }
+
+            return retval;
         }
 
         public async Task<Departmnet> Read(int id)
