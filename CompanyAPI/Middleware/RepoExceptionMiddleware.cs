@@ -26,17 +26,20 @@ namespace CompanyAPI.Middleware
             {
                 await _next(context);
             }
-            catch (RepoException ex)
+            catch (RepoException repoEx)
             {
-                switch (ex.ExType)
+                switch (repoEx.ExType)
                 {
                     case RepoResultType.SQL_ERROR:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
                         context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
                         break;
                     case RepoResultType.NOTFOUND:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
                         context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
                     case RepoResultType.WRONGPARAMETER:
+                        _logger.LogError(repoEx.InnerException, repoEx.Message);
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     default:
