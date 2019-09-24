@@ -73,7 +73,7 @@ namespace CompanyAPI.Repository
         public async Task<bool> Create(CompanyDto companyDto)
         {
             if (companyDto.Name == null || companyDto.Name == "")
-                throw new Helper.RepoException(Helper.RepoResultType.WORNGPARAMETER);
+                throw new Helper.RepoException(Helper.RepoResultType.WRONGPARAMETER);
 
             var company = new Company()
             {
@@ -86,7 +86,7 @@ namespace CompanyAPI.Repository
         public async Task<bool> Update(int id, CompanyDto companyDto)
         {
             if (companyDto.Name == null || companyDto.Name == "" || id < 1)
-                throw new Helper.RepoException(Helper.RepoResultType.WORNGPARAMETER);
+                throw new Helper.RepoException(Helper.RepoResultType.WRONGPARAMETER);
             
             var company = new Company()
             {
@@ -120,7 +120,7 @@ namespace CompanyAPI.Repository
         public async Task<bool> Delete(int id = 0)
         {
             if (id < 1)
-                throw new Helper.RepoException(Helper.RepoResultType.WORNGPARAMETER);
+                throw new Helper.RepoException(Helper.RepoResultType.WRONGPARAMETER);
 
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@id", id);

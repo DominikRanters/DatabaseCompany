@@ -26,8 +26,8 @@ namespace CompanyAPI.Helper
 
     public enum RepoResultType
     {
-        SQL_ERROR = 0,
-        NOTFOUND = 1,
-        WORNGPARAMETER,
+        SQL_ERROR,
+        NOTFOUND,
+        WRONGPARAMETER,
     }
 }
