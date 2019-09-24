@@ -33,6 +33,8 @@ namespace CompanyAPI.Controller
         [HttpGet]
         public async Task<IActionResult> GetCompanies()
         {
+            Payload User = Authentifikation.GetUser(HttpContext);
+
             var retval = await _companyRepository.Read();
             return Ok(retval);
         }
@@ -53,6 +55,8 @@ namespace CompanyAPI.Controller
         [HttpPost]
         public async Task<IActionResult> PostCompany([FromBody] CompanyDto companyDto)
         {
+            
+
             if (companyDto.Name == null || companyDto.Name == "")
                 return BadRequest();
 
