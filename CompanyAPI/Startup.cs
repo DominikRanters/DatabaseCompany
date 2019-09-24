@@ -15,6 +15,7 @@ using CompanyAPI.Model;
 using CompanyAPI.Model.Dto;
 using CompanyAPI.Repository;
 using CompanyAPI.Helper;
+using CompanyAPI.Middleware;
 
 namespace CompanyAPI
 {
@@ -52,6 +53,7 @@ namespace CompanyAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseRepoExceptionMiddleware();
             app.UseMvc();
         }
     }

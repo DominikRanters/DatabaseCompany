@@ -28,108 +28,29 @@ namespace CompanyAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDepartments()
         {
-            try
-            {
-                var retval = await _departmentRepository.Read();
-                return Ok(retval);
-            }
-            catch (RepoException repoEx)
-            {
-                switch (repoEx.ExType)
-                {
-                    case RepoResultType.SQL_ERROR:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
-
-                    case RepoResultType.WORNGPARAMETER:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return BadRequest();
-
-                    case RepoResultType.NOTFOUND:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex.ToString());
-                return Conflict();
-            }
-
-            return BadRequest();
+            var retval = await _departmentRepository.Read();
+            return Ok(retval);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDeparment(int id)
         {
-            try
-            {
-                var retval = await _departmentRepository.Read(id);
+            var retval = await _departmentRepository.Read(id);
 
-                if (retval == null)
-                    return NoContent();
+            if (retval == null)
+                return NoContent();
 
-                return Ok(retval);
-            }
-            catch (RepoException repoEx)
-            {
-                switch (repoEx.ExType)
-                {
-                    case RepoResultType.SQL_ERROR:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
-
-                    case RepoResultType.WORNGPARAMETER:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return BadRequest();
-
-                    case RepoResultType.NOTFOUND:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex.ToString());
-                return Conflict();
-            }
-
-            return BadRequest();
+            return Ok(retval);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto departmentDto)
         {
-            try
-            {
-                if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
-                    return BadRequest();
+            if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
+                return BadRequest();
 
-                if (await _departmentRepository.Create(departmentDto))
-                    return StatusCode(StatusCodes.Status201Created);
-            }
-            catch (RepoException repoEx)
-            {
-                switch (repoEx.ExType)
-                {
-                    case RepoResultType.SQL_ERROR:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
-
-                    case RepoResultType.WORNGPARAMETER:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return BadRequest();
-
-                    case RepoResultType.NOTFOUND:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex.ToString());
-                return Conflict();
-            }
+            if (await _departmentRepository.Create(departmentDto))
+                return StatusCode(StatusCodes.Status201Created);
 
             return BadRequest();
         }
@@ -137,70 +58,19 @@ namespace CompanyAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDepartment(int id, [FromBody] DepartmentDto departmentDto)
         {
-            try
-            {
-                if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
-                    return BadRequest();
+            if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
+                return BadRequest();
 
-                if (await _departmentRepository.Update(id, departmentDto))
-                    return NoContent();
-            }
-            catch (RepoException repoEx)
-            {
-                switch (repoEx.ExType)
-                {
-                    case RepoResultType.SQL_ERROR:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
-
-                    case RepoResultType.WORNGPARAMETER:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return BadRequest();
-
-                    case RepoResultType.NOTFOUND:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex.ToString());
-                return Conflict();
-            }
-
+            if (await _departmentRepository.Update(id, departmentDto))
+                return NoContent();
             return BadRequest();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
-            try
-            {
-                if (await _departmentRepository.Delete(id))
-                    return NoContent();
-            }
-            catch (RepoException repoEx)
-            {
-                switch (repoEx.ExType)
-                {
-                    case RepoResultType.SQL_ERROR:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return StatusCode(StatusCodes.Status503ServiceUnavailable);
-
-                    case RepoResultType.WORNGPARAMETER:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return BadRequest();
-
-                    case RepoResultType.NOTFOUND:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
-                        return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex.ToString());
-                return Conflict();
-            }
+            if (await _departmentRepository.Delete(id))
+                return NoContent();
 
             return BadRequest();
         }
