@@ -36,6 +36,7 @@ namespace CompanyAPI
 
             services.AddScoped<IBaseInterface<Company, CompanyDto>, CompanyRepository>();
             services.AddScoped<IBaseInterface<Departmnet, DepartmentDto>, DepartmentRepository>();
+            services.AddScoped<IBaseInterface<Employee, EmployeeDto>, EmployeeRepository>();
 
             services.AddSingleton<IDbContext, DbContext>();
         }
