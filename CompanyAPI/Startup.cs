@@ -54,6 +54,7 @@ namespace CompanyAPI
 
             app.UseHttpsRedirection();
             app.UseRepoExceptionMiddleware();
+            app.UseAuthorizationMiddleware();
             app.UseMvc();
         }
     }

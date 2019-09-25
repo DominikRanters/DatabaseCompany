@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using CompanyAPI.Interface;
+using CompanyAPI.Model;
+using CompanyAPI.Model.Dto;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyAPI.Middleware
 {
@@ -31,25 +35,30 @@ namespace CompanyAPI.Middleware
                 switch (repoEx.ExType)
                 {
                     case RepoResultType.SQL_ERROR:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        _logger.LogError(repoEx.InnerException, "ServiceUnavailable " + repoEx.Message);
                         context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
                         break;
                     case RepoResultType.NOTFOUND:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        _logger.LogError(repoEx.InnerException, "Conflict " + repoEx.Message);
                         context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
                     case RepoResultType.WRONGPARAMETER:
-                        _logger.LogError(repoEx.InnerException, repoEx.Message);
+                        _logger.LogError(repoEx.InnerException, "BadRequest " + repoEx.Message);
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
+                    case RepoResultType.FORBIDDEN:
+                        _logger.LogError(repoEx.InnerException, "Forbidden " + repoEx.Message);
+                        context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        break;
                     default:
+                        _logger.LogCritical(repoEx.InnerException, "default Conflict " + repoEx.Message);
                         context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Request failed ver heavily", new { context });
+                _logger.LogCritical(ex, "Request failed ver heavily");
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
         }
