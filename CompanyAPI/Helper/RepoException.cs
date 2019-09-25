@@ -29,5 +29,6 @@ namespace CompanyAPI.Helper
         SQL_ERROR,
         NOTFOUND,
         WRONGPARAMETER,
+        FORBIDDEN
     }
 }
