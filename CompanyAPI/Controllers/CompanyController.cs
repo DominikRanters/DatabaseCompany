@@ -33,8 +33,8 @@ namespace CompanyAPI.Controller
         [HttpGet]
         public async Task<IActionResult> GetCompanies()
         {
-            var retval = await _companyRepository.Read();
-            return Ok(retval);
+                var retval = await _companyRepository.Read();
+                return Ok(retval);
         }
 
         // GET company/1
@@ -53,7 +53,10 @@ namespace CompanyAPI.Controller
         [HttpPost]
         public async Task<IActionResult> PostCompany([FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null || companyDto.Name == "")
+            Payload user = Authentifikation.GetUser(HttpContext);
+            if (user.PersonId == "131-62105")
+            {
+                if (companyDto.Name == null || companyDto.Name == "")
                 return BadRequest();
 
             var retval = await _companyRepository.Create(companyDto);
@@ -62,28 +65,44 @@ namespace CompanyAPI.Controller
 
             return BadRequest();
         }
+            return StatusCode(StatusCodes.Status403Forbidden);
+    }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompany(int id, [FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null || companyDto.Name == "")
+            Payload user = Authentifikation.GetUser(HttpContext);
+            if (user.PersonId == "131-62105")
+            {
+                if (companyDto.Name == null || companyDto.Name == "")
                 return BadRequest();
 
             var retval = await _companyRepository.Update(id, companyDto);
             if (retval)
                 return NoContent();
             return Conflict();
-        }
+
+    }
+            return StatusCode(StatusCodes.Status403Forbidden);
+}
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
-            if (await _companyRepository.Delete(id))
+            Payload user = Authentifikation.GetUser(HttpContext);
+            if (user == null)
+                return StatusCode(StatusCodes.Status400BadRequest);
+
+            if (user.PersonId == "131-62105")
+            {
+                if (await _companyRepository.Delete(id))
                 return NoContent();
 
             return BadRequest();
+}
+            return StatusCode(StatusCodes.Status403Forbidden);
         }
     }
 }
