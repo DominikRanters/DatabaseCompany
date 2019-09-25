@@ -22,14 +22,17 @@ namespace CompanyAPI.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            Payload user = Authentifikation.GetUser(context);
-
-            if (user != null && user.PersonId == "131-62105")
+            if (context.Request.Method != "GET")
             {
-                await _next(context);
-            }else
-            {
-                throw new Helper.RepoException(Helper.RepoResultType.FORBIDDEN);
+                bool isAdmin = Authentifikation.IsUserAdmin(context);
+                if (isAdmin)
+                {
+                    await _next(context);
+                }
+                else
+                {
+                    throw new Helper.RepoException(Helper.RepoResultType.FORBIDDEN);
+                }
             }
         }
     }
