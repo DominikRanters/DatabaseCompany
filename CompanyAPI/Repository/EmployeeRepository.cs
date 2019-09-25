@@ -61,7 +61,7 @@ namespace CompanyAPI.Repository
 
                     if (retval == null)
                         throw new Helper.RepoException(Helper.RepoResultType.NOTFOUND);
-            }
+                }
             }
             catch (SqlException)
             {
