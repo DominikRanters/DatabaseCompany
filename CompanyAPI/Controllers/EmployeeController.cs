@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using CompanyAPI.Interface;
 using CompanyAPI.Model;
 using CompanyAPI.Model.Dto;
+using Chayns.Auth.ApiExtensions;
+using Chayns.Auth.Shared.Constants;
 
 namespace CompanyAPI.Controllers
 {
@@ -40,6 +42,7 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpPost]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
             if (await _employeeRepository.Create(employeeDto))
@@ -49,6 +52,7 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeDto employeeDto)
         {
             if (id > 1)
@@ -61,6 +65,7 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
             if (id > 1)

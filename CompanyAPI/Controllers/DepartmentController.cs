@@ -10,6 +10,8 @@ using CompanyAPI.Interface;
 using CompanyAPI.Model;
 using CompanyAPI.Model.Dto;
 using Microsoft.Extensions.Logging;
+using Chayns.Auth.ApiExtensions;
+using Chayns.Auth.Shared.Constants;
 
 namespace CompanyAPI.Controllers
 {
@@ -44,9 +46,10 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpPost]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto departmentDto)
         {
-            if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
+            if (string.IsNullOrEmpty(departmentDto.Name) || departmentDto.CompanyId <= 0)
                 return BadRequest();
 
             if (await _departmentRepository.Create(departmentDto))
@@ -56,9 +59,10 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> UpdateDepartment(int id, [FromBody] DepartmentDto departmentDto)
         {
-            if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
+            if (string.IsNullOrEmpty(departmentDto.Name) || departmentDto.CompanyId <= 0)
                 return BadRequest();
 
             if (await _departmentRepository.Update(id, departmentDto))
@@ -67,6 +71,7 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
             if (await _departmentRepository.Delete(id))

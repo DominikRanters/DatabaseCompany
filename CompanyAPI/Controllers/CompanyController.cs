@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Data;
 using System.Data.SqlClient;
+using Chayns.Auth.ApiExtensions;
+using Chayns.Auth.Shared.Constants;
 using Dapper;
 using CompanyAPI.Interface;
 using CompanyAPI.Model;
@@ -29,7 +31,7 @@ namespace CompanyAPI.Controller
             _companyRepository = companyRepository;
         }
 
-        // GET company
+        // GET companies
         [HttpGet]
         public async Task<IActionResult> GetCompanies()
         {
@@ -51,9 +53,10 @@ namespace CompanyAPI.Controller
 
         // POST api/values
         [HttpPost]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> PostCompany([FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null || companyDto.Name == "")
+            if (string.IsNullOrEmpty(companyDto.Name))
                 return BadRequest();
 
             var retval = await _companyRepository.Create(companyDto);
@@ -65,9 +68,10 @@ namespace CompanyAPI.Controller
 
         // PUT api/values/5
         [HttpPut("{id}")]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> PutCompany(int id, [FromBody] CompanyDto companyDto)
         {
-            if (companyDto.Name == null || companyDto.Name == "")
+            if (string.IsNullOrEmpty(companyDto.Name))
                 return BadRequest();
 
             var retval = await _companyRepository.Update(id, companyDto);
@@ -78,6 +82,7 @@ namespace CompanyAPI.Controller
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [ChaynsAuth(uac: Uac.Manager)]
         public async Task<IActionResult> DeleteCompany(int id)
         {
             if (await _companyRepository.Delete(id))
