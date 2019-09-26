@@ -33,7 +33,7 @@ namespace CompanyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddChaynsAuth();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.Configure<DbSettings>(Configuration.GetSection("DbSettings"));
 
             services.AddScoped<IBaseInterface<Company, CompanyDto>, CompanyRepository>();
@@ -59,7 +59,6 @@ namespace CompanyAPI
             app.UseRepoExceptionMiddleware();
             //app.UseAuthorizationMiddleware();
             app.InitChaynsAuth();
-            app.UseChaynsAuthMiddleware();
             app.UseMvc();
         }
     }
