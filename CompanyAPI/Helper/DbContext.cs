@@ -19,10 +19,10 @@ namespace CompanyAPI.Helper
             _settings = options.Value;
         }
 
-        public IDbConnection GetConnection()
+        public async Task<IDbConnection> GetConnection()
         {
-            var con = new SqlConnection(_settings.Connection);
-            con.Open();
+            var con =  new SqlConnection(_settings.Connection);
+            await con.OpenAsync();
             return con;
         }
     }

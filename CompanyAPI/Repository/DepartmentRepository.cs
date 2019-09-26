@@ -6,7 +6,9 @@ using System.Data;
 using CompanyAPI.Interface;
 using CompanyAPI.Model;
 using CompanyAPI.Model.Dto;
+using CompanyAPI.Helper;
 using Dapper;
+using System.Data.SqlClient;
 
 namespace CompanyAPI.Repository
 {
@@ -23,26 +25,46 @@ namespace CompanyAPI.Repository
             _dbContext = dbContext;
         }
 
-        public List<Departmnet> Read()
+        public async Task<List<Departmnet>> Read()
         {
-            using (var sqlcon = _dbContext.GetConnection())
+            List<Departmnet> retval;
+
+            try
             {
-                return sqlcon.Query<Departmnet>(selectCmd).AsList();
+                using (var sqlcon = await _dbContext.GetConnection())
+                {
+                    retval = (await sqlcon.QueryAsync<Departmnet>(selectCmd)).AsList();
+                    if (retval.Count == 0)
+                        throw new RepoException(RepoResultType.NOTFOUND);
+                }
             }
+            catch (SqlException)
+            {
+                throw new RepoException(RepoResultType.SQL_ERROR);
+            }
+
+            return retval;
         }
 
-        public Departmnet Read(int id)
+        public async Task<Departmnet> Read(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@id", id);
 
-            using (var sqlcon = _dbContext.GetConnection())
+            try
             {
-                return sqlcon.QueryFirstOrDefault<Departmnet>($"{selectCmd} WHERE @id = Id", parameters);
+                using (var sqlcon = await _dbContext.GetConnection())
+                {
+                    return await sqlcon.QueryFirstOrDefaultAsync<Departmnet>($"{selectCmd} WHERE @id = Id", parameters);
+                }
+            }
+            catch (SqlException)
+            {
+                throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
         }
 
-        public bool Create(DepartmentDto departmentDto)
+        public async Task<bool> Create(DepartmentDto departmentDto)
         {
             Departmnet departmnet = new Departmnet()
             {
@@ -51,10 +73,10 @@ namespace CompanyAPI.Repository
                 CompanyId = departmentDto.CompanyId
             };
 
-            return CreateOrUpdate(departmnet);
+            return await CreateOrUpdate(departmnet);
         }
 
-        public bool Update(int id, DepartmentDto departmentDto)
+        public async Task<bool> Update(int id, DepartmentDto departmentDto)
         {
             Departmnet departmnet = new Departmnet()
             {
@@ -64,10 +86,10 @@ namespace CompanyAPI.Repository
                 CompanyId = departmentDto.CompanyId
             };
 
-            return CreateOrUpdate(departmnet);
+            return await CreateOrUpdate(departmnet);
         }
 
-        private bool CreateOrUpdate(Departmnet departmnet)
+        private async Task<bool> CreateOrUpdate(Departmnet departmnet)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@DepartmentId", departmnet.Id);
@@ -75,29 +97,34 @@ namespace CompanyAPI.Repository
             parameters.Add("@Description", departmnet.Description);
             parameters.Add("@CompanyId", departmnet.CompanyId);
 
-            using (var sqlcon = _dbContext.GetConnection())
+            try
             {
-                try
+                using (var sqlcon = await _dbContext.GetConnection())
                 {
-                    return 1 == (sqlcon.Execute(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
+                    return 1 == await (sqlcon.ExecuteAsync(spCreateOrUpdate, parameters, commandType: CommandType.StoredProcedure));
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    return false;
-                }
-                
+            }
+            catch (SqlException)
+            {
+                throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@id", id);
 
-            using (var sqlcon = _dbContext.GetConnection())
+            try
             {
-                return 1 == (sqlcon.Execute(deleteCmd,parameters));
+                using (var sqlcon = await _dbContext.GetConnection())
+                {
+                    return 1 == await (sqlcon.ExecuteAsync(deleteCmd, parameters));
+                }
+            }
+            catch (SqlException)
+            {
+                throw new Helper.RepoException(Helper.RepoResultType.SQL_ERROR);
             }
         }
 

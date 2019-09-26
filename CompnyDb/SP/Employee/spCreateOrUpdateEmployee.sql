@@ -2,9 +2,9 @@ CREATE PROCEDURE [dbo].[spCreateOrUpdateEmployee]
 	@EmployeeId int = 0, 
     @FirstName nvarchar(128), 
     @LastName nvarchar(128), 
-    @BirthDay date, 
+    @Birthday date, 
     @DepartmentId int,
-	@AdressId int
+	@AddressId int
 AS 
 
       declare @dbId int = (select id from viEmployee where id = @EmployeeId) 
@@ -14,15 +14,15 @@ AS
              INSERT INTO	[dbo].[Employee] 
 						   ([FirstName] 
 						   ,[LastName] 
-						   ,[BirthDay] 
+						   ,[Birthday] 
 						   ,[DepartmentId]
 						   ,AddressId) 
              VALUES 
 							(@FirstName,
 							@LastName,
-							@BirthDay,
+							@Birthday,
 							@DepartmentId,
-							@AdressId) 
+							@AddressId) 
 
             set @dbId = @@IDENTITY 
       end 
@@ -33,7 +33,7 @@ AS
                         Birthday = case when @Birthday is null then Birthday else @Birthday end, 
 						LastName = case when @LastName is null then LastName else @LastName end, 
 						DepartmentId = case when @DepartmentId is null then DepartmentId else @DepartmentId end,
-						@AdressId = case when @AdressId is null then AddressId else @AdressId end
+						@AddressId = case when @AddressId is null then AddressId else @AddressId end
 			WHERE		@dbId = Employee.id;
       end 
 

@@ -9,35 +9,35 @@ using CompanyAPI.Helper;
 using CompanyAPI.Interface;
 using CompanyAPI.Model;
 using CompanyAPI.Model.Dto;
-
+using Microsoft.Extensions.Logging;
+using Chayns.Auth.ApiExtensions;
+using Chayns.Auth.Shared.Constants;
 
 namespace CompanyAPI.Controllers
 {
     [Route("department")]
     public class DepartmentController : ControllerBase
     {
+        private readonly ILogger<DepartmentController> _logger;
         private readonly IBaseInterface<Departmnet, DepartmentDto> _departmentRepository;
 
-        public DepartmentController(IBaseInterface<Departmnet, DepartmentDto> departmentRepository)
+        public DepartmentController(IBaseInterface<Departmnet, DepartmentDto> departmentRepository, ILoggerFactory loggerFactory)
         {
+            _logger = loggerFactory.CreateLogger<DepartmentController>();
             _departmentRepository = departmentRepository;
         }
 
         [HttpGet]
-        public IActionResult GetDepartments()
+        public async Task<IActionResult> GetDepartments()
         {
-            var retval = _departmentRepository.Read();
-
-            if (retval.Count == 0)
-                return NoContent();
-
+            var retval = await _departmentRepository.Read();
             return Ok(retval);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetDeparment(int id)
+        public async Task<IActionResult> GetDeparment(int id)
         {
-            var retval = _departmentRepository.Read(id);
+            var retval = await _departmentRepository.Read(id);
 
             if (retval == null)
                 return NoContent();
@@ -46,33 +46,35 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateDepartment([FromBody] DepartmentDto departmentDto)
+        [ChaynsAuth(uac: Uac.Manager)]
+        public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto departmentDto)
         {
-            if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
+            if (string.IsNullOrEmpty(departmentDto.Name) || departmentDto.CompanyId <= 0)
                 return BadRequest();
 
-            if (_departmentRepository.Create(departmentDto))
+            if (await _departmentRepository.Create(departmentDto))
                 return StatusCode(StatusCodes.Status201Created);
 
-            return StatusCode(StatusCodes.Status409Conflict);
+            return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateDepartment(int id,[FromBody] DepartmentDto departmentDto)
+        [ChaynsAuth(uac: Uac.Manager)]
+        public async Task<IActionResult> UpdateDepartment(int id, [FromBody] DepartmentDto departmentDto)
         {
-            if (departmentDto.Name == null || departmentDto.Name == "" || departmentDto.CompanyId <= 0)
+            if (string.IsNullOrEmpty(departmentDto.Name) || departmentDto.CompanyId <= 0)
                 return BadRequest();
 
-            if (_departmentRepository.Update(id, departmentDto))
+            if (await _departmentRepository.Update(id, departmentDto))
                 return NoContent();
-
-            return StatusCode(StatusCodes.Status409Conflict);
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteDepartment(int id)
+        [ChaynsAuth(uac: Uac.Manager)]
+        public async Task<IActionResult> DeleteDepartment(int id)
         {
-            if (_departmentRepository.Delete(id))
+            if (await _departmentRepository.Delete(id))
                 return NoContent();
 
             return BadRequest();
