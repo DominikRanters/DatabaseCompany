@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Chayns.Auth.ApiExtensions;
 using Microsoft.AspNetCore.Http;
+using CompanyAPI.Model;
 
 namespace CompanyAPI.Helper
 {
@@ -20,7 +21,15 @@ namespace CompanyAPI.Helper
 
         public async Task Invoke(HttpContext context)
         {
-
+            var payload = _tokenInfoProvider.GetUserGroups();
+            if (payload.Id == 1)
+            {
+                await _next(context);
+            }
+            else
+            {
+                throw new Helper.RepoException(Helper.RepoResultType.FORBIDDEN);
+            }
         }
 
 
